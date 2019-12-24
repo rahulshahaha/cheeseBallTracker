@@ -15,6 +15,12 @@ function refreshAll(){
     betList.removeChild(betList.firstChild);
   }
 
+
+  const addBetB = document.querySelector('#add-bet-button');
+  if(addBetB != null){
+  addBetB.parentNode.removeChild(addBetB);
+}
+
 	let balanceLabel = document.createElement('h1');
 	balanceLabel.textContent = "Current Balances";
 	userList.appendChild(balanceLabel);
@@ -35,6 +41,7 @@ function refreshAll(){
 	});
 		
 	let addBetButton = document.createElement('button');
+	addBetButton.setAttribute('id','add-bet-button');
 	addBetButton.textContent = "Add Bet";
 	body.appendChild(addBetButton);
 
@@ -95,7 +102,7 @@ function refreshAll(){
 
 
 
-	addBetButton.addEventListener('click',(e) => {
+addBetButton.addEventListener('click',(e) => {
 	e.stopPropagation();
 	if(e.target.textContent == 'Add Bet'){
 	lineBreak.style.display = "block";
@@ -127,14 +134,55 @@ function refreshAll(){
 
 	submitBet.addEventListener('click',(e)=>{
 		e.stopPropagation();
-		alert("relax");
+		//alert("relax");
+		createBet(user1Input.value,user2Input.value,claimInput.value,amountInput.value);
+		lineBreak.style.display = "none";
+		user1Input.style.display = "none";
+		bets.style.display = "none";
+		user2Input.style.display = "none";
+		thatText.style.display = "none";
+		claimInput.style.display = "none";
+		forText.style.display = "none";
+		amountInput.style.display = "none";
+		cheeseBallText.style.display = "none";
+		submitBet.style.display = "none";
+		e.target.textContent = 'Add Bet';
 	});
 
 	//add action buttons
 }
 
 
+function createBet(username1,username2,claim,amount){
+	var user1Doc;
+	var user2Doc;
+	db.collection('users').where('username','==',username1).get().then((snapshot)=>{
+		if(snapshot.docs[0] == null){
+			console.log("wronguser 1");
+			return;
+		}else{
+			user1Doc = snapshot.docs[0];
+			db.collection('users').where('username','==',username2).get().then((snapshot2)=>{
+				if(snapshot2.docs[0] == null){
+					console.log("wrong user 2");
+					return;
+				}else{
+					user2Doc = snapshot2.docs[0];
+					db.collection('bets').add({
+						amount: parseInt(amount),
+						claim: claim,
+						user1: db.doc('users/'+ user1Doc.id),
+						user2: db.doc('users/'+ user2Doc.id)
+					});
+					refreshAll();
+				}
+			});
+		}
+	});
 
+
+
+}
 
 
 function addBet(betDoc){
