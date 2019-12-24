@@ -285,6 +285,30 @@ console.log("here");
 							refreshAll();
 						}
 					});
+				}else{
+					//start
+					const oweUser = firebase.firestore().collection('users').doc(user1Doc.docs[0].id);
+					const owedUser = firebase.firestore().collection('users').doc(user2Doc.docs[0].id);
+					db.collection('ballzOwed').where('owed','==',owedUser).where('owedBy','==',oweUser).get().then((snapshot) =>{
+						if(snapshot.docs[0] == null){
+							db.collection('ballzOwed').add({
+								owed: db.doc('users/'+ user2Doc.docs[0].id),
+								owedBy: db.doc('users/'+ user1Doc.docs[0].id),
+								amount: betDoc.data().amount
+							});
+							//db.collection('bets').doc(betID).delete();
+							refreshAll();
+						}else{
+							db.collection("ballzOwed").doc(snapshot.docs[0].id).set({
+								amount: snapshot.docs[0].data().amount + betDoc.data().amount,
+								owed: snapshot.docs[0].data().owed,
+								owedBy: snapshot.docs[0].data().owedBy
+							})
+							//db.collection('bets').doc(betID).delete();
+							refreshAll();
+						}
+					});
+					//end
 				}
 			});
 		});
