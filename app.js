@@ -1,11 +1,13 @@
 
 const userList = document.querySelector('#user-list');
 const betList = document.querySelector('#bet-list');
+const body = document.querySelector('#body');
 
 refreshAll();
 
 
 function refreshAll(){
+
   while (userList.firstChild) {
     userList.removeChild(userList.firstChild);
   }
@@ -13,26 +15,36 @@ function refreshAll(){
     betList.removeChild(betList.firstChild);
   }
 
-  let balanceLabel = document.createElement('h1');
-  balanceLabel.textContent = "Current Balances";
-  userList.appendChild(balanceLabel);
-  let betLabel = document.createElement('h1');
-  betLabel.textContent = "Pending Bets";
-  betList.appendChild(betLabel);
+	let balanceLabel = document.createElement('h1');
+	balanceLabel.textContent = "Current Balances";
+	userList.appendChild(balanceLabel);
+	let betLabel = document.createElement('h1');
+	betLabel.textContent = "Pending Bets";
+	betList.appendChild(betLabel);
 
-db.collection('users').get().then((snapshot) => {
-	snapshot.docs.forEach(userDoc => {
-		addUser(userDoc);
+	db.collection('users').get().then((snapshot) => {
+		snapshot.docs.forEach(userDoc => {
+			addUser(userDoc);
+		});
 	});
+
+	db.collection('bets').get().then((snapshot) => {
+		snapshot.docs.forEach(betDoc =>{
+			addBet(betDoc);
+		})
+	});
+		
+	let addBetButton = document.createElement('button');
+	addBetButton.textContent = "Add Bet";
+	body.appendChild(addBetButton);
+
+	addBetButton.addEventListener('click',(e) => {
+	e.stopPropagation();
+	alert("This isnt setup yet dumbass");
+
 });
 
-db.collection('bets').get().then((snapshot) => {
-	snapshot.docs.forEach(betDoc =>{
-		addBet(betDoc);
-	})
-});
-
-//add action buttons
+	//add action buttons
 }
 
 
@@ -48,10 +60,12 @@ function addBet(betDoc){
 	let resolveButton = document.createElement('button');
 	let deleteButton = document.createElement('button');
 
+
 	resolveButton.setAttribute('bet-id',betDoc.id);
 	resolveButton.textContent = "Resolve Bet";
 	deleteButton.setAttribute('bet-id',betDoc.id);
 	deleteButton.textContent = "Delete Bet";
+
 
 
 	db.collection('users').doc(betDoc.data().user1.id).get().then((snapshot) => {
