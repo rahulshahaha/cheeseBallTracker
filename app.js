@@ -38,9 +38,92 @@ function refreshAll(){
 	addBetButton.textContent = "Add Bet";
 	body.appendChild(addBetButton);
 
+	let lineBreak = document.createElement('hr');
+	let user1Input = document.createElement('input');
+	let user2Input = document.createElement('input');
+	let claimInput = document.createElement('input');
+	let amountInput = document.createElement('input');
+	let thatText = document.createElement('p');
+	let forText = document.createElement('p');
+	let cheeseBallText = document.createElement('p');
+	let bets = document.createElement('p');
+	let submitBet = document.createElement('button');
+
+	bets.textContent = 'bets';
+	thatText.textContent = 'that';
+	forText.textContent = 'for';
+	cheeseBallText.textContent = 'cheese balls';
+	submitBet.textContent = 'Submit Bet';
+
+	user1Input.setAttribute('id','user1Input');
+	user2Input.setAttribute('id','user2Input');
+	claimInput.setAttribute('id','claimInput');
+	amountInput.setAttribute('id','amountInput');
+
+	amountInput.setAttribute('type','number');
+	amountInput.setAttribute('min','1');
+	amountInput.setAttribute('max','10');
+
+	user1Input.setAttribute('placeholder','Username1');
+	user2Input.setAttribute('placeholder','Username2');
+	claimInput.setAttribute('placeholder','Claim');
+	amountInput.setAttribute('placeholder','Amount');
+
+
+	body.appendChild(lineBreak);
+	body.appendChild(user1Input);
+	body.appendChild(bets);
+	body.appendChild(user2Input);
+	body.appendChild(thatText);
+	body.appendChild(claimInput);
+	body.appendChild(forText);
+	body.appendChild(amountInput);
+	body.appendChild(cheeseBallText);
+	body.appendChild(submitBet);
+
+
+	lineBreak.style.display = "none";
+	user1Input.style.display = "none";
+	bets.style.display = "none";
+	user2Input.style.display = "none";
+	thatText.style.display = "none";
+	claimInput.style.display = "none";
+	forText.style.display = "none";
+	amountInput.style.display = "none";
+	cheeseBallText.style.display = "none";
+	submitBet.style.display = "none";
+
+
+
 	addBetButton.addEventListener('click',(e) => {
 	e.stopPropagation();
-	alert("This isnt setup yet dumbass");
+	if(e.target.textContent == 'Add Bet'){
+	lineBreak.style.display = "block";
+	user1Input.style.display = "block";
+	bets.style.display = "block";
+	user2Input.style.display = "block";
+	thatText.style.display = "block";
+	claimInput.style.display = "block";
+	forText.style.display = "block";
+	amountInput.style.display = "block";
+	cheeseBallText.style.display = "block";
+	submitBet.style.display = "block";
+	e.target.textContent = 'Cancel';
+}else{
+	lineBreak.style.display = "none";
+	user1Input.style.display = "none";
+	bets.style.display = "none";
+	user2Input.style.display = "none";
+	thatText.style.display = "none";
+	claimInput.style.display = "none";
+	forText.style.display = "none";
+	amountInput.style.display = "none";
+	cheeseBallText.style.display = "none";
+	submitBet.style.display = "none";
+	e.target.textContent = 'Add Bet';
+}
+
+
 
 });
 
@@ -121,10 +204,12 @@ function validateBet(user1UserName,user2UserName,enteredUserName,betID){
 		return;
 	}
 
+console.log("here");
 
-
-	db.collection('users').where('username','==',user1UserName).limit(1).get().then((user1Doc) => {
+	db.collection('users').where('username','==',user1UserName).get().then((user1Doc) => {
+		console.log(user1Doc);
 		db.collection('users').where('username','==',user2UserName).get().then((user2Doc) =>{
+
 			db.collection('bets').doc(betID).get().then((betDoc) =>{
 				if(enteredUserName == user1UserName){
 					const owedUser = firebase.firestore().collection('users').doc(user1Doc.docs[0].id);
