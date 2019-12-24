@@ -1,0 +1,44 @@
+<html>
+    <head>
+        <script src="https://www.gstatic.com/firebasejs/7.6.1/firebase-app.js"></script>
+        <script src="https://www.gstatic.com/firebasejs/7.6.1/firebase-firestore.js"></script>
+        <link rel="stylesheet" href="styles.css">
+    </head>
+    <body>
+
+
+
+<ul id="user-list">
+
+
+</ul>
+
+<ul id="bet-list">
+
+
+</ul>
+
+
+
+
+<script>
+  // Your web app's Firebase configuration
+  var firebaseConfig = {
+    apiKey: "AIzaSyDDWZa4WpPDG6W8hLtuj17vYW2Ao48pz9s",
+    authDomain: "cheese-ball-tracker.firebaseapp.com",
+    databaseURL: "https://cheese-ball-tracker.firebaseio.com",
+    projectId: "cheese-ball-tracker",
+    storageBucket: "cheese-ball-tracker.appspot.com",
+    messagingSenderId: "1031534403712",
+    appId: "1:1031534403712:web:b368c245f13ff57b9d8665",
+    measurementId: "G-TWM0JQ1427"
+  };
+  // Initialize Firebase
+  firebase.initializeApp(firebaseConfig);
+  const db = firebase.firestore();
+</script>
+
+
+        <script src="app.js"></script>
+    </body>
+</html>
