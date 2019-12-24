@@ -286,7 +286,6 @@ console.log("here");
 						}
 					});
 				}else{
-					//start
 					const oweUser = firebase.firestore().collection('users').doc(user1Doc.docs[0].id);
 					const owedUser = firebase.firestore().collection('users').doc(user2Doc.docs[0].id);
 					db.collection('ballzOwed').where('owed','==',owedUser).where('owedBy','==',oweUser).get().then((snapshot) =>{
@@ -308,7 +307,6 @@ console.log("here");
 							refreshAll();
 						}
 					});
-					//end
 				}
 			});
 		});
