@@ -230,7 +230,7 @@ function addBet(betDoc){
 	resolveButton.addEventListener('click',(e) => {
 		e.stopPropagation();
 		let id = e.target.getAttribute('bet-id');
-		var winnerUsername = prompt("Enter the username of the winner","rahulshahaha");
+		var winnerUsername = prompt("Enter the username of the winner");
 		var user1Username ;
 		var user2Username;
 
