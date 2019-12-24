@@ -123,9 +123,12 @@ function refreshAll(){
 	e.target.textContent = 'Add Bet';
 }
 
-
-
 });
+
+	submitBet.addEventListener('click',(e)=>{
+		e.stopPropagation();
+		alert("relax");
+	});
 
 	//add action buttons
 }
