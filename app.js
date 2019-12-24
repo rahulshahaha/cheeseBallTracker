@@ -189,6 +189,7 @@ function addBet(betDoc){
 	var better;
 	var betee;
 	var bet = betDoc.data().claim;
+	var amount = betDoc.data().amount;
 
 	let betText = document.createElement('p');
 	let resolveButton = document.createElement('button');
@@ -204,13 +205,13 @@ function addBet(betDoc){
 
 	db.collection('users').doc(betDoc.data().user1.id).get().then((snapshot) => {
 		better = snapshot.data().name;
-		betText.textContent = better + " bets " + betee + " that " + bet;
+		betText.textContent = better + " bets " + betee + " " + amount + " cheese balls that " + bet;
 	});
 
 
 	db.collection('users').doc(betDoc.data().user2.id).get().then((snapshot) => {
 		betee = snapshot.data().name;
-		betText.textContent = better + " bets " + betee + " that " + bet;
+		betText.textContent = better + " bets " + betee + " " + amount + " cheese balls that " + bet;
 	});
 
 	betList.appendChild(betText);
