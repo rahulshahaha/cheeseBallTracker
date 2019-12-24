@@ -273,7 +273,7 @@ console.log("here");
 								owedBy: db.doc('users/'+ user2Doc.docs[0].id),
 								amount: betDoc.data().amount
 							});
-							//db.collection('bets').doc(betID).delete();
+							db.collection('bets').doc(betID).delete();
 							refreshAll();
 						}else{
 							db.collection("ballzOwed").doc(snapshot.docs[0].id).set({
@@ -281,7 +281,7 @@ console.log("here");
 								owed: snapshot.docs[0].data().owed,
 								owedBy: snapshot.docs[0].data().owedBy
 							})
-							//db.collection('bets').doc(betID).delete();
+							db.collection('bets').doc(betID).delete();
 							refreshAll();
 						}
 					});
