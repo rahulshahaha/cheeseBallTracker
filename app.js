@@ -81,7 +81,7 @@ function addBet(betDoc){
 	resolveButton.addEventListener('click',(e) => {
 		e.stopPropagation();
 		let id = e.target.getAttribute('bet-id');
-		var winnerUsername = prompt("Enter the username of the winner");
+		var winnerUsername = prompt("Enter the username of the winner","rahulshahaha");
 		var user1Username ;
 		var user2Username;
 
@@ -100,9 +100,7 @@ function addBet(betDoc){
 }
 
 function validateBet(user1UserName,user2UserName,enteredUserName,betID){
-	console.log(user1UserName);
-	console.log(user2UserName);
-	console.log(betID);
+
 
 	if(enteredUserName != user1UserName && enteredUserName != user2UserName){
 		console.log("Wrong user");
@@ -111,15 +109,33 @@ function validateBet(user1UserName,user2UserName,enteredUserName,betID){
 
 
 
-	db.collection('users').where('username','==',user1UserName).get().then((user1Doc) =>{
-		const owedUser = firebase.firestore().collection('users').doc(user1Doc.id);
-		db.collection('users').where('username','==',user1UserName).get().then((user2Doc) =>{
-			const oweUser = firebase.firestore().collection('users').doc(user2Doc.id);
-			if(enteredUserName == user1UserName){
-				db.collection('ballzOwed').where('owed','==',owedUser).get().then((snapshot) =>{
-					console.log(snapshot.data().username);
-				});
-			}
+	db.collection('users').where('username','==',user1UserName).limit(1).get().then((user1Doc) => {
+		db.collection('users').where('username','==',user2UserName).get().then((user2Doc) =>{
+			db.collection('bets').doc(betID).get().then((betDoc) =>{
+				if(enteredUserName == user1UserName){
+					const owedUser = firebase.firestore().collection('users').doc(user1Doc.docs[0].id);
+					const oweUser = firebase.firestore().collection('users').doc(user2Doc.docs[0].id);
+					db.collection('ballzOwed').where('owed','==',owedUser).where('owedBy','==',oweUser).get().then((snapshot) =>{
+						if(snapshot.docs[0] == null){
+							db.collection('ballzOwed').add({
+								owed: db.doc('users/'+ user1Doc.docs[0].id),
+								owedBy: db.doc('users/'+ user2Doc.docs[0].id),
+								amount: betDoc.data().amount
+							});
+							//db.collection('bets').doc(betID).delete();
+							refreshAll();
+						}else{
+							db.collection("ballzOwed").doc(snapshot.docs[0].id).set({
+								amount: snapshot.docs[0].data().amount + betDoc.data().amount,
+								owed: snapshot.docs[0].data().owed,
+								owedBy: snapshot.docs[0].data().owedBy
+							})
+							//db.collection('bets').doc(betID).delete();
+							refreshAll();
+						}
+					});
+				}
+			});
 		});
 	});
 
@@ -155,10 +171,9 @@ function addUser(doc){
 
 
 
-	const owedUser = firebase.firestore()
-   .collection('users')
-   .doc(doc.id);
+	const owedUser = firebase.firestore().collection('users').doc(doc.id);
    
+
 	db.collection('ballzOwed').where('owed','==',owedUser).get().then((snapshot) => {
 		snapshot.docs.forEach(owedDoc => {
 				db.collection('users').doc(owedDoc.data().owedBy.id).get().then(function(owerDoc){
@@ -169,7 +184,7 @@ function addUser(doc){
 						owedLabel.textContent = OwedText;
 						owedList.appendChild(owedLabel);
 						balance = parseInt(balance) + parseInt(number);
-						name.textContent = doc.data().name + " - " + parseInt(balance);
+						name.textContent = doc.data().name + " (" + doc.data().username + "): " + parseInt(balance);
 				});
 		});
 	})
@@ -184,12 +199,12 @@ function addUser(doc){
 						owedLabel.textContent = OwedText;
 						owedList.appendChild(owedLabel);
 						balance = parseInt(balance) - parseInt(number);
-						name.textContent = doc.data().name + ": " + parseInt(balance);
+						name.textContent = doc.data().name + " (" + doc.data().username + "): " + parseInt(balance);
 				});
 		});
 	})
 
-	name.textContent = doc.data().name + ": " + parseInt(balance);
+	name.textContent = doc.data().name + " (" + doc.data().username + "): " + parseInt(balance);
 
 	personHolder.appendChild(name);
 	personHolder.appendChild(owedList);
