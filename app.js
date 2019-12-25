@@ -59,6 +59,7 @@ function refreshAll(){
 	let bets = document.createElement('p');
 	let submitBet = document.createElement('button');
 
+
 	bets.textContent = 'bets';
 	thatText.textContent = 'that';
 	forText.textContent = 'for';
@@ -80,6 +81,26 @@ function refreshAll(){
 	amountInput.setAttribute('placeholder','Amount');
 
 
+
+	let lineBreak2 = document.createElement('hr');
+	let payer = document.createElement('input');
+	let paysText = document.createElement('p');
+	let payee = document.createElement('input');
+	let paymentAmount = document.createElement('input');
+	let cheeseBallPaymentText = document.createElement('p');
+	let submitPayment = document.createElement('button');
+
+	payer.setAttribute('placeholder','Payer Username');
+	paysText.textContent = 'paid';
+	payee.setAttribute('placeholder','Payee Username');
+	paymentAmount.setAttribute('type','number');
+	paymentAmount.setAttribute('min','1');
+	paymentAmount.setAttribute('max','10');
+	paymentAmount.setAttribute('placeholder',"Number");
+	cheeseBallPaymentText.textContent = 'cheese balls';
+	submitPayment.textContent = 'Submit Payment';
+
+
 	body.appendChild(lineBreak);
 	body.appendChild(user1Input);
 	body.appendChild(bets);
@@ -91,6 +112,14 @@ function refreshAll(){
 	body.appendChild(cheeseBallText);
 	body.appendChild(submitBet);
 
+	body.appendChild(lineBreak2);
+	body.appendChild(payer);
+	body.appendChild(paysText);
+	body.appendChild(payee);
+	body.appendChild(paymentAmount);
+	body.appendChild(cheeseBallPaymentText);
+	body.appendChild(submitPayment);
+
 
 	lineBreak.style.display = "none";
 	user1Input.style.display = "none";
@@ -103,36 +132,65 @@ function refreshAll(){
 	cheeseBallText.style.display = "none";
 	submitBet.style.display = "none";
 
+
+	lineBreak2.style.display = "none";
+	payer.style.display = "none";
+	paysText.style.display = "none";
+	payee.style.display = "none";
+	paymentAmount.style.display = "none";
+	cheeseBallPaymentText.style.display = "none";
+	submitPayment.style.display = "none";
+
+
 recordPaymentButton.addEventListener('click',(e) =>{
-	alert('relax');
+	e.stopPropagation();
+	if(e.target.textContent == 'Record Payment'){
+		lineBreak2.style.display = "block";
+		payer.style.display = "block";
+		paysText.style.display = "block";
+		payee.style.display = "block";
+		paymentAmount.style.display = "block";
+		cheeseBallPaymentText.style.display = "block";
+		submitPayment.style.display = "block";
+		e.target.textContent = 'Cancel';
+	}else{
+		lineBreak2.style.display = "none";
+		payer.style.display = "none";
+		paysText.style.display = "none";
+		payee.style.display = "none";
+		paymentAmount.style.display = "none";
+		cheeseBallPaymentText.style.display = "none";
+		submitPayment.style.display = "none";
+		e.target.textContent = 'Record Payment';
+	}
 });
 
 addBetButton.addEventListener('click',(e) => {
 	e.stopPropagation();
 	if(e.target.textContent == 'Add Bet'){
-	lineBreak.style.display = "block";
-	user1Input.style.display = "block";
-	bets.style.display = "block";
-	user2Input.style.display = "block";
-	thatText.style.display = "block";
-	claimInput.style.display = "block";
-	forText.style.display = "block";
-	amountInput.style.display = "block";
-	cheeseBallText.style.display = "block";
-	submitBet.style.display = "block";
-	e.target.textContent = 'Cancel';
+		lineBreak.style.display = "block";
+		user1Input.style.display = "block";
+		bets.style.display = "block";
+		user2Input.style.display = "block";
+		thatText.style.display = "block";
+		claimInput.style.display = "block";
+		forText.style.display = "block";
+		amountInput.style.display = "block";
+		cheeseBallText.style.display = "block";
+		submitBet.style.display = "block";
+		e.target.textContent = 'Cancel';
 }else{
-	lineBreak.style.display = "none";
-	user1Input.style.display = "none";
-	bets.style.display = "none";
-	user2Input.style.display = "none";
-	thatText.style.display = "none";
-	claimInput.style.display = "none";
-	forText.style.display = "none";
-	amountInput.style.display = "none";
-	cheeseBallText.style.display = "none";
-	submitBet.style.display = "none";
-	e.target.textContent = 'Add Bet';
+		lineBreak.style.display = "none";
+		user1Input.style.display = "none";
+		bets.style.display = "none";
+		user2Input.style.display = "none";
+		thatText.style.display = "none";
+		claimInput.style.display = "none";
+		forText.style.display = "none";
+		amountInput.style.display = "none";
+		cheeseBallText.style.display = "none";
+		submitBet.style.display = "none";
+		e.target.textContent = 'Add Bet';
 }
 
 });
@@ -151,7 +209,21 @@ addBetButton.addEventListener('click',(e) => {
 		amountInput.style.display = "none";
 		cheeseBallText.style.display = "none";
 		submitBet.style.display = "none";
-		e.target.textContent = 'Add Bet';
+		addBetButton.textContent = 'Add Bet';
+	});
+
+	submitPayment.addEventListener('click',(e)=>{
+		e.stopPropagation();
+		alert("relax this doesnt work yet");
+		//createBet(user1Input.value,user2Input.value,claimInput.value,amountInput.value);
+		lineBreak2.style.display = "none";
+		payer.style.display = "none";
+		paysText.style.display = "none";
+		payee.style.display = "none";
+		paymentAmount.style.display = "none";
+		cheeseBallPaymentText.style.display = "none";
+		submitPayment.style.display = "none";
+		recordPaymentButton.textContent = "Record Payment";
 	});
 
 	//add action buttons
