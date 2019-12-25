@@ -214,8 +214,7 @@ addBetButton.addEventListener('click',(e) => {
 
 	submitPayment.addEventListener('click',(e)=>{
 		e.stopPropagation();
-		alert("relax this doesnt work yet");
-		//createBet(user1Input.value,user2Input.value,claimInput.value,amountInput.value);
+		addPayment(payer.value,payee.value,paymentAmount.value);
 		lineBreak2.style.display = "none";
 		payer.style.display = "none";
 		paysText.style.display = "none";
@@ -229,6 +228,9 @@ addBetButton.addEventListener('click',(e) => {
 	//add action buttons
 }
 
+function addPayment(payerUsername,payeeUsername,amount){
+		alert("relax this doesnt work yet");
+}
 
 function createBet(username1,username2,claim,amount){
 	var user1Doc;
