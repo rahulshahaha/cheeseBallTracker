@@ -172,7 +172,8 @@ function createBet(username1,username2,claim,amount){
 						amount: parseInt(amount),
 						claim: claim,
 						user1: db.doc('users/'+ user1Doc.id),
-						user2: db.doc('users/'+ user2Doc.id)
+						user2: db.doc('users/'+ user2Doc.id),
+						active: true
 					});
 					refreshAll();
 				}
