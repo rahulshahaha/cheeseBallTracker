@@ -41,9 +41,12 @@ function refreshAll(){
 	});
 		
 	let addBetButton = document.createElement('button');
+	let recordPaymentButton = document.createElement('button');
+	recordPaymentButton.textContent = "Record Payment";
 	addBetButton.setAttribute('id','add-bet-button');
 	addBetButton.textContent = "Add Bet";
 	body.appendChild(addBetButton);
+	body.appendChild(recordPaymentButton);
 
 	let lineBreak = document.createElement('hr');
 	let user1Input = document.createElement('input');
@@ -100,7 +103,9 @@ function refreshAll(){
 	cheeseBallText.style.display = "none";
 	submitBet.style.display = "none";
 
-
+recordPaymentButton.addEventListener('click',(e) =>{
+	alert('relax');
+});
 
 addBetButton.addEventListener('click',(e) => {
 	e.stopPropagation();
