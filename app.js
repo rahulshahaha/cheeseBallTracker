@@ -223,7 +223,9 @@ function addBet(betDoc){
 		e.stopPropagation();
 		let id = e.target.getAttribute('bet-id');
 		if (confirm("Are you sure?")) {
-			db.collection('bets').doc(id).delete();
+			db.collection('bets').doc(id).update({
+				active: false
+			});
 			refreshAll();
 		} 	
 	});
