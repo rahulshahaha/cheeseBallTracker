@@ -34,7 +34,7 @@ function refreshAll(){
 		});
 	});
 
-	db.collection('bets').get().then((snapshot) => {
+	db.collection('bets').where('active','==',true).get().then((snapshot) => {
 		snapshot.docs.forEach(betDoc =>{
 			addBet(betDoc);
 		})
@@ -273,7 +273,9 @@ console.log("here");
 								owedBy: db.doc('users/'+ user2Doc.docs[0].id),
 								amount: betDoc.data().amount
 							});
-							db.collection('bets').doc(betID).delete();
+							db.collection('bets').doc(betID).update({
+								active: false
+							});
 							refreshAll();
 						}else{
 							db.collection("ballzOwed").doc(snapshot.docs[0].id).set({
@@ -281,7 +283,9 @@ console.log("here");
 								owed: snapshot.docs[0].data().owed,
 								owedBy: snapshot.docs[0].data().owedBy
 							})
-							db.collection('bets').doc(betID).delete();
+							db.collection('bets').doc(betID).update({
+								active: false
+							});
 							refreshAll();
 						}
 					});
@@ -295,7 +299,9 @@ console.log("here");
 								owedBy: db.doc('users/'+ user1Doc.docs[0].id),
 								amount: betDoc.data().amount
 							});
-							db.collection('bets').doc(betID).delete();
+							db.collection('bets').doc(betID).update({
+								active: false
+							});
 							refreshAll();
 						}else{
 							db.collection("ballzOwed").doc(snapshot.docs[0].id).set({
@@ -303,7 +309,9 @@ console.log("here");
 								owed: snapshot.docs[0].data().owed,
 								owedBy: snapshot.docs[0].data().owedBy
 							})
-							db.collection('bets').doc(betID).delete();
+							db.collection('bets').doc(betID).update({
+								active: false
+							});
 							refreshAll();
 						}
 					});
