@@ -365,6 +365,7 @@ function addUser(doc){
 						var person = owerDoc.data().name;
 						var OwedText = person + " owes " + doc.data().name + " " + number + " cheese balls";
 						var owedLabel = document.createElement('p');
+						owedLabel.setAttribute('id','owed');
 						owedLabel.textContent = OwedText;
 						owedList.appendChild(owedLabel);
 						balance = parseInt(balance) + parseInt(number);
@@ -380,6 +381,7 @@ function addUser(doc){
 						var person = owerDoc.data().name;
 						var OwedText = doc.data().name + " owes " + person + " " + number + " cheese balls";
 						var owedLabel = document.createElement('p');
+						owedLabel.setAttribute('id','owe');
 						owedLabel.textContent = OwedText;
 						owedList.appendChild(owedLabel);
 						balance = parseInt(balance) - parseInt(number);
