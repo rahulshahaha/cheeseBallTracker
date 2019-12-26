@@ -259,9 +259,6 @@ function createBet(username1,username2,claim,amount){
 			});
 		}
 	});
-
-
-
 }
 
 
