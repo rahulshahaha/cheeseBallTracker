@@ -37,7 +37,62 @@ function refreshAll(){
 		snapshot.docs.forEach(userDoc => {
 			addUser(userDoc);
 		});
+		let addUserButton = document.createElement('button');
+		addUserButton.textContent = 'Add User';
+		userList.appendChild(addUserButton);
+
+		let addUserName = document.createElement('input');
+		let addUserUsername = document.createElement('input');
+		let addUserSubmit = document.createElement('button');
+
+		addUserSubmit.textContent = 'Submit';
+		addUserName.setAttribute('placeholder','Name');
+		addUserUsername.setAttribute('placeholder','Username');
+
+		userList.appendChild(addUserName);
+		userList.appendChild(addUserUsername);
+		userList.appendChild(addUserSubmit);
+
+		addUserName.style.display = "none";
+		addUserUsername.style.display = "none";
+		addUserSubmit.style.display = "none";
+
+		addUserButton.addEventListener('click',(e) => {
+			e.stopPropagation();
+			if(e.target.textContent == 'Add User'){
+				addUserName.style.display = "block";
+				addUserUsername.style.display = "block";
+				addUserSubmit.style.display = "block";
+				e.target.textContent = 'Cancel';
+			}else{
+				addUserName.style.display = "none";
+				addUserUsername.style.display = "none";
+				addUserSubmit.style.display = "none";
+				e.target.textContent = 'Add User';
+			}
+		});
+
+		addUserSubmit.addEventListener('click',(e) =>{
+			e.stopPropagation();
+			var name = addUserName.value;
+			var username = addUserUsername.value;
+			if(name == '' || username == ''){
+				addUserName.style.display = "none";
+				addUserUsername.style.display = "none";
+				addUserSubmit.style.display = "none";
+				addUserButton.textContent = 'Add User';
+			}else{
+				db.collection('users').add({
+					name: name,
+					username: username
+				});
+				refreshAll();
+			}
+		});
+
 	});
+
+
 
 	db.collection('bets').where('active','==',true).get().then((snapshot) => {
 		snapshot.docs.forEach(betDoc =>{
