@@ -567,8 +567,6 @@ function addUser(doc){
 	personHolder.appendChild(owedList);
 	personHolder.appendChild(oweList);
 	userList.appendChild(personHolder);
-
-
 }
 
 
