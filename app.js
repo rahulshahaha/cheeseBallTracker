@@ -294,13 +294,13 @@ function addPayment(payerUsername,payeeUsername,amount){
 	var payeeDoc;
 	db.collection('users').where('username','==',payerUsername).get().then((snapshot)=>{
 		if(snapshot.docs[0] == null){
-			console.log("Wrong payer");
+			alert("Wrong payer");
 			return;
 		}else{
 			payerDoc = snapshot.docs[0];
 			db.collection('users').where('username','==',payeeUsername).get().then((snapshot2)=>{
 				if(snapshot2.docs[0] == null){
-					console.log("wrong payee");
+					alert("wrong payee");
 					return;
 				}else{
 					const payer = firebase.firestore().collection('users').doc(snapshot.docs[0].id);
@@ -332,13 +332,13 @@ function createBet(username1,username2,claim,amount){
 	var user2Doc;
 	db.collection('users').where('username','==',username1).get().then((snapshot)=>{
 		if(snapshot.docs[0] == null){
-			console.log("wronguser 1");
+			alert("wronguser 1");
 			return;
 		}else{
 			user1Doc = snapshot.docs[0];
 			db.collection('users').where('username','==',username2).get().then((snapshot2)=>{
 				if(snapshot2.docs[0] == null){
-					console.log("wrong user 2");
+					alert("wrong user 2");
 					return;
 				}else{
 					user2Doc = snapshot2.docs[0];
@@ -426,16 +426,13 @@ function validateBet(user1UserName,user2UserName,enteredUserName,betID){
 
 
 	if(enteredUserName != user1UserName && enteredUserName != user2UserName){
-		console.log("Wrong user");
+		alert("Wrong user");
 		return;
 	}
 
-console.log("here");
 
 	db.collection('users').where('username','==',user1UserName).get().then((user1Doc) => {
-		console.log(user1Doc);
 		db.collection('users').where('username','==',user2UserName).get().then((user2Doc) =>{
-
 			db.collection('bets').doc(betID).get().then((betDoc) =>{
 				if(enteredUserName == user1UserName){
 					const owedUser = firebase.firestore().collection('users').doc(user1Doc.docs[0].id);
