@@ -21,6 +21,11 @@ function refreshAll(){
   addBetB.parentNode.removeChild(addBetB);
 }
 
+  const recordPaymentB = document.querySelector('#record-payment-button');
+  if(recordPaymentB != null){
+  recordPaymentB.parentNode.removeChild(recordPaymentB);
+}
+
 	let balanceLabel = document.createElement('h1');
 	balanceLabel.textContent = "Current Balances";
 	userList.appendChild(balanceLabel);
@@ -44,6 +49,7 @@ function refreshAll(){
 	let recordPaymentButton = document.createElement('button');
 	recordPaymentButton.textContent = "Record Payment";
 	addBetButton.setAttribute('id','add-bet-button');
+	recordPaymentButton.setAttribute('id','record-payment-button');
 	addBetButton.textContent = "Add Bet";
 	body.appendChild(addBetButton);
 	body.appendChild(recordPaymentButton);
@@ -229,7 +235,41 @@ addBetButton.addEventListener('click',(e) => {
 }
 
 function addPayment(payerUsername,payeeUsername,amount){
-		alert("relax this doesnt work yet");
+	var payerDoc;
+	var payeeDoc;
+	db.collection('users').where('username','==',payerUsername).get().then((snapshot)=>{
+		if(snapshot.docs[0] == null){
+			console.log("Wrong payer");
+			return;
+		}else{
+			payerDoc = snapshot.docs[0];
+			db.collection('users').where('username','==',payeeUsername).get().then((snapshot2)=>{
+				if(snapshot2.docs[0] == null){
+					console.log("wrong payee");
+					return;
+				}else{
+					const payer = firebase.firestore().collection('users').doc(snapshot.docs[0].id);
+					const payee = firebase.firestore().collection('users').doc(snapshot2.docs[0].id);
+					db.collection('ballzOwed').where('owed','==',payee).where('owedBy','==',payer).get().then((owedDoc) => {
+						if(owedDoc.docs[0] == null){
+							db.collection('ballzOwed').add({
+								amount: parseInt(amount)*-1,
+								owed: db.doc('users/'+ snapshot2.docs[0].id),
+								owedBy: db.doc('users/'+ snapshot.docs[0].id)
+							});
+							refreshAll();
+						}else{
+							var currentAmount = owedDoc.docs[0].data().amount;
+							db.collection('ballzOwed').doc(owedDoc.docs[0].id).update({
+								amount: currentAmount - parseInt(amount)
+							});
+							refreshAll();
+						}
+					});
+				}
+			});
+		}
+	});
 }
 
 function createBet(username1,username2,claim,amount){
