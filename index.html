@@ -2,6 +2,7 @@
     <head>
         <script src="https://www.gstatic.com/firebasejs/7.6.1/firebase-app.js"></script>
         <script src="https://www.gstatic.com/firebasejs/7.6.1/firebase-firestore.js"></script>
+        <script src="https://www.gstatic.com/firebasejs/7.6.1/firebase-auth.js"></script>
         <link rel="icon" href="cheeseBall.jpeg">
         <link rel="stylesheet" href="styles.css">
     </head>
@@ -39,6 +40,7 @@
   // Initialize Firebase
   firebase.initializeApp(firebaseConfig);
   const db = firebase.firestore();
+  const auth = firebase.auth();
 </script>
 
 
