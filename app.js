@@ -1,4 +1,19 @@
+var userData;
+var openBets;
+var ballsOwed;
+var loggedInUser = false;
 
+
+//setup initial data
+
+
+//refresh all (on auth change or user change)
+
+
+//ballzOwed Change
+
+
+//bets change
 
 //listen for auth status changes
 auth.onAuthStateChanged(user => {
@@ -9,8 +24,6 @@ auth.onAuthStateChanged(user => {
         })
         db.collection('guides').onSnapshot(snapshot =>{
             setupGuides(snapshot.docs);
-        }, err => {
-            console.log(err.message);
         });
     }else{
         setupGuides([]);
