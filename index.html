@@ -22,8 +22,11 @@
           <li class="logged-in" style="display: none;">
             <a href="#" class="grey-text" id="logout">Logout</a>
           </li>
-          <li class="admin" style="display: none;">
-            <a href="#" class="grey-text modal-trigger" data-target="modal-create">Create Guide</a>
+          <li class="logged-in" style="display: none;">
+            <a href="#" class="grey-text modal-trigger" data-target="modal-create">Create Bet</a>
+          </li>
+          <li class="logged-in" style="display: none;">
+            <a href="#" class="grey-text modal-trigger" data-target="modal-record">Record Payment</a>
           </li>
           <li class="logged-out" style="display: none;">
             <a href="#" class="grey-text modal-trigger" data-target="modal-login">Login</a>
@@ -52,9 +55,49 @@
           <label for="signup-password">Choose password</label>
         </div>
           <div class='input-field'>
-            <input type="text" id="signup-bio" required />
-            <label for="signup-bio">One Line Bio</label>
+            <input type="text" id="signup-name" required />
+            <label for="signup-name">Name</label>
           </div>
+        <button class="btn yellow darken-2 z-depth-0">Sign up</button>
+        <p class="error pink-text center-align"></p>
+      </form>
+    </div>
+  </div>
+
+
+  <!-- Record payment MODAL -->
+  <div id="modal-record" class="modal">
+    <div class="modal-content">
+      <h4>Sign up</h4><br />
+      <form id="record-form">
+        <div class="input-field col s12">
+          <select id="user1Record">
+            <option value="" disabled selected>Choose your option</option>
+            <option value="1">Option 1</option>
+            <option value="2">Option 2</option>
+            <option value="3">Option 3</option>
+          </select>
+        </div>
+        <p>paid</p>
+        <div class="input-field col s12">
+          <select id="user2Record">
+            <option value="" disabled selected>Choose your option</option>
+            <option value="1">Option 1</option>
+            <option value="2">Option 2</option>
+            <option value="3">Option 3</option>
+          </select>
+        </div>
+        <div class="input-field col s12">
+          <select id="numberPaid">
+            <option value="" disabled selected>Number</option>
+            <option value="1">1</option>
+            <option value="2">2</option>
+            <option value="3">3</option>
+            <option value="4">4</option>
+            <option value="5">5</option>
+          </select>
+        </div>
+        <p>cheese balls</p>
         <button class="btn yellow darken-2 z-depth-0">Sign up</button>
         <p class="error pink-text center-align"></p>
       </form>
@@ -80,6 +123,21 @@
     </div>
   </div>
 
+    <!-- Resolve MODAL -->
+    <div id="modal-resolve" class="modal">
+      <div class="modal-content">
+        <h4>Resolve Bet</h4><br />
+        <form id="resolve-form">
+          <div class="input-field">
+            <input type="text" id="resolve-email" required />
+            <label for="resolve-email">Winner Email</label>
+          </div>
+          <button class="btn yellow darken-2 z-depth-0">Resolve</button>
+          <p class="error pink-text center-align"></p>
+        </form>
+      </div>
+    </div>
+
   <!-- ACCOUNT MODAL -->
   <div id="modal-account" class="modal">
     <div class="modal-content center-align">
@@ -91,28 +149,68 @@
   <!-- CREATE GUIDE MODAL -->
   <div id="modal-create" class="modal">
     <div class="modal-content">
-      <h4>Create Guide</h4><br />
+      <h4>Create Bet</h4><br />
       <form id="create-form">
-        <div class="input-field">
-          <input type="text" id="title" required>
-          <label for="title">Guide Title</label>
+        <div class="input-field col s12">
+          <select id="user1Select">
+            <option value="" disabled selected>Choose your option</option>
+            <option value="1">Option 1</option>
+            <option value="2">Option 2</option>
+            <option value="3">Option 3</option>
+          </select>
         </div>
-        <div class="input-field">
-          <textarea id="content" class="materialize-textarea" required></textarea>
-          <label for="content">Guide Content</label>
+        <p>bets</p>
+        <div class="input-field col s12">
+          <select id="user2Select">
+            <option value="" disabled selected>Choose your option</option>
+            <option value="1">Option 1</option>
+            <option value="2">Option 2</option>
+            <option value="3">Option 3</option>
+          </select>
         </div>
+        <p>that</p>
+        <div class="input-field">
+          <textarea id="claim" class="materialize-textarea" required></textarea>
+          <label for="content">Claim</label>
+        </div>
+        <p>for</p>
+        <div class="input-field col s12">
+          <select id="numberSelect">
+            <option value="" disabled selected>Number</option>
+            <option value="1">1</option>
+            <option value="2">2</option>
+            <option value="3">3</option>
+            <option value="4">4</option>
+            <option value="5">5</option>
+          </select>
+        </div>
+        <p>cheese balls</p>
         <button class="btn yellow darken-2 z-depth-0">Create</button>
       </form>
     </div>
   </div>
 
+  <h3 class="center-align">Balances</h3>
   <!-- GUIDE LIST -->
   <div class="container" style="margin-top: 40px;">
     <ul class="collapsible z-depth-0 guides" style="border: none;">
       
     </ul>
   </div>
-  
+
+<h3 class="center-align">Pending Bets</h3>
+    <!-- Bet LIST -->
+    <ul class="collection" id="bet-list">
+      <li class="collection-item">
+        <p>Bet text</p>
+        <button class="btn yellow darken-2 z-depth-0">Resolve</button>
+        <button class="btn yellow darken-2 z-depth-0">Delete</button>
+      </li>
+      <li class="collection-item">Alvin</li>
+      <li class="collection-item">Alvin</li>
+      <li class="collection-item">Alvin</li>
+    </ul>
+    
 
 
 <!-- The core Firebase JS SDK is always required and must be listed first -->

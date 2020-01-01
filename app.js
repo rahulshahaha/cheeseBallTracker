@@ -1,54 +1,223 @@
-var userData;
-var openBets;
-var ballsOwed;
-var loggedInUser = false;
+var resolveBetID;
+var resolveForm = document.querySelector("#resolve-form");
 
 
-//setup initial data
 
 
-//refresh all (on auth change or user change)
+
+//delete bet
+function deleteBet(betID){
+	if (confirm("Are you sure?")) {
+		db.collection('bets').doc(betID).update({
+			active: false
+		});
+	} 
+}
 
 
-//ballzOwed Change
+//resolve bet
+
+	//set id
+function resolveBet(betID){
+	resolveBetID = betID;
+}
+
+	//resolveForm
+resolveForm.addEventListener('submit',(e) => {
+	e.preventDefault();
+	var winnerEmail = resolveForm['resolve-email'].value;
+	db.collection('bets').doc(resolveBetID).get().then(betDoc => {
+		db.collection('userz').doc(betDoc.data().user1.id).get().then(user1Doc => {
+			db.collection('userz').doc(betDoc.data().user2.id).get().then(user2Doc => {
+
+				if(winnerEmail != user1Doc.data().email && winnerEmail != user2Doc.data().email){
+					alert("Please enter a valid email, its not that hard");
+					const modal = document.querySelector('#modal-resolve');
+					//M.Modal.getInstance(modal).close();
+					resolveForm.reset();
+					return;
+				}else{
+					if(winnerEmail == user1Doc.data().email){
+						//user 1 wins
+						//see if there is existing debt
+						db.collection('ballzOwed').where('owed','==',db.collection('userz').doc(betDoc.data().user1.id)).where('owedBy','==',db.collection('userz').doc(betDoc.data().user2.id)).get().then(oweDoc =>{
+							if(oweDoc.docs[0] == null){
+								//debt does not exist
+								db.collection('ballzOwed').add({
+									owed: db.doc('userz/'+ user1Doc.id),
+									owedBy: db.doc('userz/'+ user2Doc.id),
+									amount: betDoc.data().amount
+								});
+								db.collection('bets').doc(betDoc.id).update({
+									active: false
+								});
+							}else{	
+								//debt exists
+								db.collection('ballzOwed').doc(oweDoc.docs[0].id).set({
+									owed: db.doc('userz/'+ user1Doc.id),
+									owedBy: db.doc('userz/'+ user2Doc.id),
+									amount: betDoc.data().amount + oweDoc.docs[0].data().amount
+								});
+								db.collection('bets').doc(betDoc.id).update({
+									active: false
+								});
+							}
+						});
+					}else{
+						//user 2 wins
+						//see if there is existing debt
+						db.collection('ballzOwed').where('owed','==',db.collection('userz').doc(betDoc.data().user2.id)).where('owedBy','==',db.collection('userz').doc(betDoc.data().user1.id)).get().then(oweDoc =>{
+							if(oweDoc.docs[0] == null){
+								//debt does not exist
+								db.collection('ballzOwed').add({
+									owed: db.doc('userz/'+ user2Doc.id),
+									owedBy: db.doc('userz/'+ user1Doc.id),
+									amount: betDoc.data().amount
+								});
+								db.collection('bets').doc(betDoc.id).update({
+									active: false
+								});
+							}else{	
+								//debt exists
+								db.collection('ballzOwed').doc(oweDoc.docs[0].id).set({
+									owed: db.doc('userz/'+ user2Doc.id),
+									owedBy: db.doc('userz/'+ user1Doc.id),
+									amount: betDoc.data().amount + oweDoc.docs[0].data().amount
+								});
+								db.collection('bets').doc(betDoc.id).update({
+									active: false
+								});
+							}
+						});
+					}
+					const modal = document.querySelector('#modal-resolve');
+					M.Modal.getInstance(modal).close();
+					resolveForm.reset();
+				}
+			});
+		});
+	});
+});
 
 
-//bets change
+
 
 //listen for auth status changes
 auth.onAuthStateChanged(user => {
     if(user){
-        user.getIdTokenResult().then(idTokenResult => {
-            user.admin = idTokenResult.claims.admin;
-            setupUI(user);
-        })
-        db.collection('guides').onSnapshot(snapshot =>{
-            setupGuides(snapshot.docs);
-        });
+        setupUI(user);
+        db.collection('userz').onSnapshot(userSnapshot =>{
+			db.collection('ballzOwed').get().then(owedSnapshot => {
+				currentUser = firebase.auth().currentUser;
+				if(currentUser){
+					setupUsers(userSnapshot.docs,owedSnapshot.docs);
+				}
+			});
+		});
+		db.collection('ballzOwed').onSnapshot(owedSnapshot => {
+			db.collection('userz').get().then(userSnapshot => {
+				currentUser = firebase.auth().currentUser;
+				if(currentUser){
+				setupUsers(userSnapshot.docs,owedSnapshot.docs);
+				}
+			});
+		});
+		db.collection('bets').onSnapshot(betSnapshot => {
+			db.collection('userz').get().then(userSnapshot => {
+				currentUser = firebase.auth().currentUser;
+				if(currentUser){
+				setupBets(betSnapshot.docs,userSnapshot.docs);
+				}
+			});
+		});
+		
     }else{
-        setupGuides([]);
-        setupUI();
+		setupUI();
+		setupUsers([]);
+		setupBets([]);
     }
 });
 
-//create new guide
+
+
+
+
+//create new bet
 const createForm = document.querySelector('#create-form');
 createForm.addEventListener('submit',(e) => {
-    e.preventDefault();
+	e.preventDefault();
+	var user1ID = createForm['user1Select'].value;
+	var user2ID = createForm['user2Select'].value;
+	var claim = createForm['claim'].value;
+	var amount = createForm['numberSelect'].value;
 
-    db.collection('guides').add({
-        title: createForm['title'].value,
-        content: createForm['content'].value
+	if(user1ID == '' || user2ID == '' || claim == '' || amount == '' || user1ID == user2ID){
+		alert("Invalid data");
+		return;
+	}
+
+
+    db.collection('bets').add({
+		user1: db.doc('userz/'+ user1ID),
+		user2: db.doc('userz/'+ user2ID),
+		claim: claim,
+		amount: amount,
+		active: true
     }).then(() => {
         //close modal and reset form
         const modal = document.querySelector('#modal-create');
         M.Modal.getInstance(modal).close();
         createForm.reset();
-    }).catch(err => {
-        console.log(err.message);
-    })
+    });
+});
 
 
+//record payment
+const recordForm = document.querySelector('#record-form');
+recordForm.addEventListener('submit',(e) => {
+	e.preventDefault();
+	var payerID = recordForm['user1Record'].value;
+	var payeeID = recordForm['user2Record'].value;
+	var amount = recordForm['numberPaid'].value;
+
+	if(payerID == '' || payeeID == '' || amount == '' || payeeID == payerID){
+		alert("invalid data");
+		return;
+	}
+
+	//check for existing debt
+	db.collection('ballzOwed').where('owed', '==', db.collection('userz').doc(payeeID)).where('owedBy', '==', db.collection('userz').doc(payerID)).get().then(debtDocs => {
+		if(debtDocs.docs[0] == null){
+			//doesnt exist
+			db.collection('ballzOwed').add({
+				owed: db.doc('userz/'+ payeeID),
+				owedBy: db.doc('userz/'+ payerID),
+				amount: amount*-1
+			});
+			const modal = document.querySelector('#modal-record');
+			M.Modal.getInstance(modal).close();
+			recordForm.reset();
+		}else{
+			//exists
+			if(debtDocs.docs[0].data().amount - amount == 0){
+				db.collection("ballzOwed").doc(debtDocs.docs[0].id).delete().then(() => {
+					const modal = document.querySelector('#modal-record');
+					M.Modal.getInstance(modal).close();
+					recordForm.reset();		
+				});
+			}else{
+				db.collection('ballzOwed').doc(debtDocs.docs[0].id).set({
+					owed: db.doc('userz/'+ payeeID),
+					owedBy: db.doc('userz/'+ payerID),
+					amount: debtDocs.docs[0].data().amount - amount
+				}).then(() => {
+					const modal = document.querySelector('#modal-record');
+					M.Modal.getInstance(modal).close();
+					recordForm.reset();		
+				})
+			}
+		}
+	});
 
 });
 
@@ -64,7 +233,8 @@ signupForm.addEventListener('submit',(e) => {
     //sign up the user
     auth.createUserWithEmailAndPassword(email,password).then(cred => {
         return db.collection('userz').doc(cred.user.uid).set({
-            bio: signupForm['signup-bio'].value
+			email: signupForm['signup-email'].value,
+			name: signupForm['signup-name'].value
         });
     }).then(() => {
         const modal = document.querySelector('#modal-signup');
