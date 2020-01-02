@@ -87,7 +87,7 @@ const setupUsers = (userDocs,owedDocs) => {
 
         var li = `
         <li>
-            <div class="collapsible-header grey lighten-4">${userData.name} (${userData.email}): ${balance}</div>
+            <div class="collapsible-header grey lighten-4">${userData.name}: ${balance}</div>
         `;
 
         textList.forEach(text => {
