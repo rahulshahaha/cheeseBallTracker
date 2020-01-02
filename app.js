@@ -20,12 +20,28 @@ function deleteBet(betID){
 	//set id
 function resolveBet(betID){
 	resolveBetID = betID;
+	var resolvePicker = document.querySelector('#winnerSelect');
+	var html = `<option value="" disabled selected>Choose winner</option>`;
+	
+	db.collection('bets').doc(betID).get().then(betDoc => {
+		db.collection('userz').doc(betDoc.data().user1.id).get().then(user1Doc => {
+			db.collection('userz').doc(betDoc.data().user2.id).get().then(user2Doc => {
+				console.log(user1Doc.data());
+				html += `<option value="${user1Doc.data().email}">${user1Doc.data().name}</option>`;
+				html += `<option value="${user2Doc.data().email}">${user2Doc.data().name}</option>`;
+				resolvePicker.innerHTML = html;
+				var instances = M.FormSelect.init(resolvePicker);
+			});
+		});
+	});
+
+
 }
 
 	//resolveForm
 resolveForm.addEventListener('submit',(e) => {
 	e.preventDefault();
-	var winnerEmail = resolveForm['resolve-email'].value;
+	var winnerEmail = resolveForm['winnerSelect'].value;
 	db.collection('bets').doc(resolveBetID).get().then(betDoc => {
 		db.collection('userz').doc(betDoc.data().user1.id).get().then(user1Doc => {
 			db.collection('userz').doc(betDoc.data().user2.id).get().then(user2Doc => {
