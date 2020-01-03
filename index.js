@@ -131,37 +131,41 @@ const setupUsers = (userDocs,owedDocs) => {
 
 
 //setup bets
-const setupBets = (betDocs,userDocs) => {
-    if(betDocs.length){
-        let html = '';
+const setupBets = (betDocs,userDocs,currentUser) => {
+    //console.log(currentUser.uid);
+        if(betDocs.length){
+            db.collection('userz').doc(currentUser.uid).get().then(currentUser => {    
 
-        betDocs.forEach(betDoc => {
-            if(betDoc.data().active){
-                var user1Name;
-                var user2Name;
-                // console.log(betDoc.id);
-                // console.log(betDoc.data().user1.id);
-                var user1 = userDocs.filter( function(userDocs){return (userDocs.id == betDoc.data().user1.id);} );
-                user1Name = user1[0].data().name;
-                var user2 = userDocs.filter( function(userDocs){return (userDocs.id == betDoc.data().user2.id);} );
-                user2Name = user2[0].data().name;
-                var li = `<li class="collection-item">`;
-                var text = `
-                <p>${user1Name} bets ${user2Name} that ${betDoc.data().claim} for ${betDoc.data().amount} cheese ball(s)</p>`;
-                var resolveButton = `
-                <button onclick="resolveBet('${betDoc.id}')" class="btn yellow darken-2 z-depth-0 modal-trigger" betID="${betDoc.id}" data-target="modal-resolve">Resolve</button>`
-                var deleteButton = `
-                <button onclick="deleteBet('${betDoc.id}')" class="btn yellow darken-2 z-depth-0" betID="${betDoc.id}">Delete</button>`
-                li += text;
-                li += resolveButton;
-                li += deleteButton;
-                html += li;
-            }
+            let html = '';
+
+            betDocs.forEach(betDoc => {
+                if(betDoc.data().active && (betDoc.data().user1.id == currentUser.id || betDoc.data().user2.id == currentUser.id || currentUser.id == 'Ke5I8MktMAOfwZ1FmFF5PcyrGPt2' )){
+                    var user1Name;
+                    var user2Name;
+                    // console.log(betDoc.id);
+                    // console.log(betDoc.data().user1.id);
+                    var user1 = userDocs.filter( function(userDocs){return (userDocs.id == betDoc.data().user1.id);} );
+                    user1Name = user1[0].data().name;
+                    var user2 = userDocs.filter( function(userDocs){return (userDocs.id == betDoc.data().user2.id);} );
+                    user2Name = user2[0].data().name;
+                    var li = `<li class="collection-item">`;
+                    var text = `
+                    <p>${user1Name} bets ${user2Name} that ${betDoc.data().claim} for ${betDoc.data().amount} cheese ball(s)</p>`;
+                    var resolveButton = `
+                    <button onclick="resolveBet('${betDoc.id}')" class="btn yellow darken-2 z-depth-0 modal-trigger" betID="${betDoc.id}" data-target="modal-resolve">Resolve</button>`
+                    var deleteButton = `
+                    <button onclick="deleteBet('${betDoc.id}')" class="btn yellow darken-2 z-depth-0" betID="${betDoc.id}">Delete</button>`
+                    li += text;
+                    li += resolveButton;
+                    li += deleteButton;
+                    html += li;
+                }
+            });
+            betList.innerHTML = html;
         });
-        betList.innerHTML = html;
-    }else{
-        betList.innerHTML = '<h5 class="center-align">Login to view pending bets</h5>';
-    }
+        }else{
+            betList.innerHTML = '<h5 class="center-align">Login to view pending bets</h5>';
+        }
 
 }
 

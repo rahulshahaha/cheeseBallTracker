@@ -141,7 +141,7 @@ auth.onAuthStateChanged(user => {
 			db.collection('userz').get().then(userSnapshot => {
 				currentUser = firebase.auth().currentUser;
 				if(currentUser){
-				setupBets(betSnapshot.docs,userSnapshot.docs);
+				setupBets(betSnapshot.docs,userSnapshot.docs,firebase.auth().currentUser);
 				}
 			});
 		});
