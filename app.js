@@ -177,7 +177,8 @@ createForm.addEventListener('submit',(e) => {
 		user2: db.doc('userz/'+ user2ID),
 		claim: claim,
 		amount: parseInt(amount),
-		active: true
+		active: true,
+		secret: false
     }).then(() => {
         //close modal and reset form
         const modal = document.querySelector('#modal-create');
