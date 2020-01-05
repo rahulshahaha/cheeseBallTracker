@@ -165,6 +165,7 @@ createForm.addEventListener('submit',(e) => {
 	var user2ID = createForm['user2Select'].value;
 	var claim = createForm['claim'].value;
 	var amount = createForm['numberSelect'].value;
+	var secret = createForm['secret'].checked;
 
 	if(user1ID == '' || user2ID == '' || claim == '' || amount == '' || user1ID == user2ID){
 		alert("Invalid data");
@@ -178,7 +179,7 @@ createForm.addEventListener('submit',(e) => {
 		claim: claim,
 		amount: parseInt(amount),
 		active: true,
-		secret: false
+		secret: secret
     }).then(() => {
         //close modal and reset form
         const modal = document.querySelector('#modal-create');
