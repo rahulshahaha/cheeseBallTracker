@@ -4,6 +4,8 @@ const loggedOutLinks = document.querySelectorAll('.logged-out');
 const loggedInLinks = document.querySelectorAll('.logged-in');
 const accountDetails = document.querySelector('.account-details');
 const adminItems = document.querySelectorAll('.admin');
+const betStats = document.querySelector('#bet-stats');
+const owedStats = document.querySelector('#owed-stats');
 
 const setupUI = (user) => {
   if(user){
@@ -36,7 +38,14 @@ const setupUI = (user) => {
 //setup users
 const setupUsers = (userDocs,owedDocs) => {
   
-
+var ballzOwed = 0;
+db.collection('ballzOwed').get().then(owedDocs => {
+    owedDocs.forEach(owedDoc => {
+        ballzOwed += owedDoc.data().amount;
+    });
+    owedHtml = `<h5 class="center-align">Total Balls Owed: ${ballzOwed}</h5>`
+    owedStats.innerHTML = owedHtml;
+});
 
 
 
@@ -134,11 +143,17 @@ const setupUsers = (userDocs,owedDocs) => {
 const setupBets = (betDocs,userDocs,currentUser) => {
     //console.log(currentUser.uid);
         if(betDocs.length){
+            var totalBets = 0;
+            var totalBallsBet = 0;
             db.collection('userz').doc(currentUser.uid).get().then(currentUser => {    
 
             let html = '';
 
             betDocs.forEach(betDoc => {
+                if(betDoc.data().active == true){
+                totalBets++;
+                totalBallsBet += betDoc.data().amount;
+                }
                 if(betDoc.data().active && (betDoc.data().user1.id == currentUser.id || betDoc.data().user2.id == currentUser.id 
                 || betDoc.data().secret == false
                 //|| currentUser.id == 'Ke5I8MktMAOfwZ1FmFF5PcyrGPt2' 
@@ -164,8 +179,13 @@ const setupBets = (betDocs,userDocs,currentUser) => {
                     html += li;
                 }
             });
+            var statHTML = ``;
+            statHTML += `<h5 class="center-align">Open Bets: ${totalBets} (${totalBallsBet} cheese balls)</h5>`;
+            betStats.innerHTML = statHTML;
             betList.innerHTML = html;
         });
+
+
         }else{
             betList.innerHTML = '<h5 class="center-align">Login to view pending bets</h5>';
         }
