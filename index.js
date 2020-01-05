@@ -63,7 +63,7 @@ const setupUsers = (userDocs,owedDocs) => {
             var amount = parseInt(owedToRecord.data().amount);
             var text = owedBy + " owes " + owedTo + " " + amount + " cheese balls";
             //li += `<div class="collapsible-body white">${text}</div>`
-            textList.push(`<div class="collapsible-body white">${text}</div>`);
+            textList.push(`<div class="collapsible-body white blue lighten-1">${text}</div>`);
             balance += amount;
         })
 
@@ -76,7 +76,7 @@ const setupUsers = (userDocs,owedDocs) => {
             var amount = parseInt(owedRecord.data().amount);
             var text = owedBy + " owes " + owedTo + " " + amount + " cheese balls";
             // li += `<div class="collapsible-body white">${text}</div>`
-            textList.push(`<div class="collapsible-body white">${text}</div>`);
+            textList.push(`<div class="collapsible-body white red lighten-1">${text}</div>`);
             balance -= amount;
         })
 
