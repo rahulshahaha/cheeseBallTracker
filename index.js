@@ -60,7 +60,7 @@ const setupUsers = (userDocs,owedDocs) => {
             var owedByArray = userDocs.filter(function(userDocs){return (userDocs.id == owedToRecord.data().owedBy.id);});
             var owedBy = owedByArray[0].data().name;
             var owedTo = doc.data().name;
-            var amount = owedToRecord.data().amount;
+            var amount = parseInt(owedToRecord.data().amount);
             var text = owedBy + " owes " + owedTo + " " + amount + " cheese balls";
             //li += `<div class="collapsible-body white">${text}</div>`
             textList.push(`<div class="collapsible-body white">${text}</div>`);
@@ -73,7 +73,7 @@ const setupUsers = (userDocs,owedDocs) => {
             var owedArray = userDocs.filter(function(userDocs){return (userDocs.id == owedRecord.data().owed.id);});
             var owedTo = owedArray[0].data().name;
             var owedBy = doc.data().name;
-            var amount = owedRecord.data().amount;
+            var amount = parseInt(owedRecord.data().amount);
             var text = owedBy + " owes " + owedTo + " " + amount + " cheese balls";
             // li += `<div class="collapsible-body white">${text}</div>`
             textList.push(`<div class="collapsible-body white">${text}</div>`);
@@ -139,7 +139,9 @@ const setupBets = (betDocs,userDocs,currentUser) => {
             let html = '';
 
             betDocs.forEach(betDoc => {
-                if(betDoc.data().active && (betDoc.data().user1.id == currentUser.id || betDoc.data().user2.id == currentUser.id || currentUser.id == 'Ke5I8MktMAOfwZ1FmFF5PcyrGPt2' )){
+                if(betDoc.data().active && (betDoc.data().user1.id == currentUser.id || betDoc.data().user2.id == currentUser.id 
+                //|| currentUser.id == 'Ke5I8MktMAOfwZ1FmFF5PcyrGPt2' 
+                )){
                     var user1Name;
                     var user2Name;
                     // console.log(betDoc.id);

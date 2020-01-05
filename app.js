@@ -61,7 +61,7 @@ resolveForm.addEventListener('submit',(e) => {
 								db.collection('ballzOwed').add({
 									owed: db.doc('userz/'+ user1Doc.id),
 									owedBy: db.doc('userz/'+ user2Doc.id),
-									amount: betDoc.data().amount
+									amount:parseInt(betDoc.data().amount)
 								});
 								db.collection('bets').doc(betDoc.id).update({
 									active: false
@@ -71,7 +71,7 @@ resolveForm.addEventListener('submit',(e) => {
 								db.collection('ballzOwed').doc(oweDoc.docs[0].id).set({
 									owed: db.doc('userz/'+ user1Doc.id),
 									owedBy: db.doc('userz/'+ user2Doc.id),
-									amount: betDoc.data().amount + oweDoc.docs[0].data().amount
+									amount: parseInt(betDoc.data().amount) + parseInt(oweDoc.docs[0].data().amount)
 								});
 								db.collection('bets').doc(betDoc.id).update({
 									active: false
@@ -87,7 +87,7 @@ resolveForm.addEventListener('submit',(e) => {
 								db.collection('ballzOwed').add({
 									owed: db.doc('userz/'+ user2Doc.id),
 									owedBy: db.doc('userz/'+ user1Doc.id),
-									amount: betDoc.data().amount
+									amount: parseInt(betDoc.data().amount)
 								});
 								db.collection('bets').doc(betDoc.id).update({
 									active: false
@@ -97,7 +97,7 @@ resolveForm.addEventListener('submit',(e) => {
 								db.collection('ballzOwed').doc(oweDoc.docs[0].id).set({
 									owed: db.doc('userz/'+ user2Doc.id),
 									owedBy: db.doc('userz/'+ user1Doc.id),
-									amount: betDoc.data().amount + oweDoc.docs[0].data().amount
+									amount: parseInt(betDoc.data().amount) + parseInt(oweDoc.docs[0].data().amount)
 								});
 								db.collection('bets').doc(betDoc.id).update({
 									active: false
@@ -176,7 +176,7 @@ createForm.addEventListener('submit',(e) => {
 		user1: db.doc('userz/'+ user1ID),
 		user2: db.doc('userz/'+ user2ID),
 		claim: claim,
-		amount: amount,
+		amount: parseInt(amount),
 		active: true
     }).then(() => {
         //close modal and reset form
@@ -207,7 +207,7 @@ recordForm.addEventListener('submit',(e) => {
 			db.collection('ballzOwed').add({
 				owed: db.doc('userz/'+ payeeID),
 				owedBy: db.doc('userz/'+ payerID),
-				amount: amount*-1
+				amount: parseInt(amount)*-1
 			});
 			const modal = document.querySelector('#modal-record');
 			M.Modal.getInstance(modal).close();
@@ -224,7 +224,7 @@ recordForm.addEventListener('submit',(e) => {
 				db.collection('ballzOwed').doc(debtDocs.docs[0].id).set({
 					owed: db.doc('userz/'+ payeeID),
 					owedBy: db.doc('userz/'+ payerID),
-					amount: debtDocs.docs[0].data().amount - amount
+					amount: parseInt(debtDocs.docs[0].data().amount) - parseInt(amount)
 				}).then(() => {
 					const modal = document.querySelector('#modal-record');
 					M.Modal.getInstance(modal).close();
