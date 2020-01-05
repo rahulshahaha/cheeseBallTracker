@@ -140,6 +140,7 @@ const setupBets = (betDocs,userDocs,currentUser) => {
 
             betDocs.forEach(betDoc => {
                 if(betDoc.data().active && (betDoc.data().user1.id == currentUser.id || betDoc.data().user2.id == currentUser.id 
+                || betDoc.data().secret == false
                 //|| currentUser.id == 'Ke5I8MktMAOfwZ1FmFF5PcyrGPt2' 
                 )){
                     var user1Name;
