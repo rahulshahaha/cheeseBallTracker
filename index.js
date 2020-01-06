@@ -168,7 +168,7 @@ const setupBets = (betDocs,userDocs,currentUser) => {
                     user2Name = user2[0].data().name;
                     var li = `<li class="collection-item">`;
                     var text = `
-                    <p>${user1Name} bets ${user2Name} that ${betDoc.data().claim} for ${betDoc.data().amount} cheese ball(s)</p>`;
+                    <p>${user1Name} bets ${user2Name} ${betDoc.data().claim} for ${betDoc.data().amount} cheese ball(s)</p>`;
                     var resolveButton = `
                     <button onclick="resolveBet('${betDoc.id}')" class="btn yellow darken-2 z-depth-0 modal-trigger" betID="${betDoc.id}" data-target="modal-resolve">Resolve</button>`
                     var deleteButton = `
