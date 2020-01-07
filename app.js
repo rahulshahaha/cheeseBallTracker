@@ -4,10 +4,10 @@ var globalUser;
 
 
 
-// db.collection('userz').get().then(users => {
-// 	users.docs.forEach(user => {
-// 		db.collection('userz').doc(user.id).update({
-// 			congrats: 0
+// db.collection('bets').where('resolved','==',true).get().then(bets => {
+// 	bets.docs.forEach(bet => {
+// 		db.collection('bets').doc(bet.id).update({
+// 			resolvedBy: db.doc('userz/'+ globalUser.uid)
 // 		})
 // 	});
 // })
