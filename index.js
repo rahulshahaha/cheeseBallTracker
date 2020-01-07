@@ -18,7 +18,7 @@ const setupUI = (user) => {
       const html = `
         <div>Logged in as ${user.email}</div>
         <div>${doc.data().name}</div>
-        <div class="pink-text">${user.admin ? 'Admin' : ''}</div>
+        <div>Congrats Received: ${doc.data().congrats}</div>
       `;
       accountDetails.innerHTML = html;
     });
