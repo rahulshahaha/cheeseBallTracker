@@ -1,5 +1,6 @@
 var resolveBetID;
 var resolveForm = document.querySelector("#resolve-form");
+var globalUser;
 
 
 
@@ -76,7 +77,8 @@ resolveForm.addEventListener('submit',(e) => {
 									winner: user1Doc.data().name,
 									resolved: true,
 									inactiveDate: firebase.firestore.FieldValue.serverTimestamp(),
-									user1Won: true
+									user1Won: true,
+									resolvedBy: db.doc('userz/'+ globalUser.uid)
 								});
 							}else{	
 								//debt exists
@@ -90,7 +92,8 @@ resolveForm.addEventListener('submit',(e) => {
 									winner: user1Doc.data().name,
 									resolved: true,
 									inactiveDate: firebase.firestore.FieldValue.serverTimestamp(),
-									user1Won: true
+									user1Won: true,
+									resolvedBy: db.doc('userz/'+ globalUser.uid)
 								});
 							}
 						});
@@ -110,7 +113,8 @@ resolveForm.addEventListener('submit',(e) => {
 									winner: user2Doc.data().name,
 									resolved: true,
 									inactiveDate: firebase.firestore.FieldValue.serverTimestamp(),
-									user1Won: false
+									user1Won: false,
+									resolvedBy: db.doc('userz/'+ globalUser.uid)
 								});
 							}else{	
 								//debt exists
@@ -124,7 +128,8 @@ resolveForm.addEventListener('submit',(e) => {
 									winner: user2Doc.data().name,
 									resolved: true,
 									inactiveDate: firebase.firestore.FieldValue.serverTimestamp(),
-									user1Won: false
+									user1Won: false,
+									resolvedBy: db.doc('userz/'+ globalUser.uid)
 								});
 							}
 						});
@@ -144,6 +149,7 @@ resolveForm.addEventListener('submit',(e) => {
 //listen for auth status changes
 auth.onAuthStateChanged(user => {
     if(user){
+		globalUser = user;
         setupUI(user);
         db.collection('userz').onSnapshot(userSnapshot =>{
 			db.collection('ballzOwed').get().then(owedSnapshot => {
@@ -172,6 +178,7 @@ auth.onAuthStateChanged(user => {
 		});
 		
     }else{
+		globalUser = null;
 		setupUI();
 		setupUsers([]);
 		setupBets([]);
