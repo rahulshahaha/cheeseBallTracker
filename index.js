@@ -232,20 +232,26 @@ function resolvedBets(betDocs,userDocs){
             resolvedBetsList.forEach(resolvedBet => {
                 user1 = userDocs.filter( function(userDocs){return (userDocs.id == resolvedBet.data().user1.id);} );
                 user2 = userDocs.filter( function(userDocs){return (userDocs.id == resolvedBet.data().user2.id);} );
-                        var betText = user1[0].data().name + ' bets ' + user2[0].data().name + ' ' + resolvedBet.data().claim + ' for ' + resolvedBet.data().amount + ' cheese ball(s)';
-                        var timestamp = resolvedBet.data().inactiveDate;
-                        var dateString = 'null';
-                        if(timestamp != null){
-                        var inactiveDate = new Date(timestamp.seconds * 1000);
-                        dateString = inactiveDate.toLocaleDateString();
-                        }
-                        var li = `
-                        <li class="collection-item">
-                        <p class="left-align">${betText}</p>
-                        <p onClick="congratulate('${resolvedBet.data().winner}')" class="btn yellow darken-2 z-depth-0">${resolvedBet.data().winner}</p>
-                        <p class="right-align right">Resolved on: ${dateString}</p>
-                        </li>`;
-                        html += li;
+                var winnerID;
+                if(resolvedBet.data().user1Won == true){
+                    winnerID = user1[0].id;
+                }else{
+                    winnerID = user2[0].id;
+                }
+                var betText = user1[0].data().name + ' bets ' + user2[0].data().name + ' ' + resolvedBet.data().claim + ' for ' + resolvedBet.data().amount + ' cheese ball(s)';
+                var timestamp = resolvedBet.data().inactiveDate;
+                var dateString = 'null';
+                if(timestamp != null){
+                var inactiveDate = new Date(timestamp.seconds * 1000);
+                dateString = inactiveDate.toLocaleDateString();
+                }
+                var li = `
+                <li class="collection-item">
+                <p class="left-align">${betText}</p>
+                <p onClick="congratulate('${winnerID}')" class="btn yellow darken-2 z-depth-0">${resolvedBet.data().winner}</p>
+                <p class="right-align right">Resolved on: ${dateString}</p>
+                </li>`;
+                html += li;
             });
             resolvedList.innerHTML = html;
         }
@@ -253,6 +259,16 @@ function resolvedBets(betDocs,userDocs){
 }
 
 
-function congratulate(person){
-    alert('Congratulations, ' + person + "!");
+function congratulate(winnerID){
+    var user = firebase.auth().currentUser;
+    if(user.uid == winnerID){
+        alert("Cant congratulate yourself")
+        return;
+    }
+    db.collection('userz').doc(winnerID).get().then(winner => {
+        alert('Congratulations, ' + winner.data().name + "!");
+        db.collection('userz').doc(winnerID).update({
+            congrats: 1 + winner.data().congrats
+        })
+    })
 }

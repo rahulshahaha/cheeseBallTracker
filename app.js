@@ -2,6 +2,16 @@ var resolveBetID;
 var resolveForm = document.querySelector("#resolve-form");
 
 
+
+// db.collection('userz').get().then(users => {
+// 	users.docs.forEach(user => {
+// 		db.collection('userz').doc(user.id).update({
+// 			congrats: 0
+// 		})
+// 	});
+// })
+
+
 //delete bet
 function deleteBet(betID){
 	if (confirm("Are you sure?")) {
@@ -65,7 +75,8 @@ resolveForm.addEventListener('submit',(e) => {
 									active: false,
 									winner: user1Doc.data().name,
 									resolved: true,
-									inactiveDate: firebase.firestore.FieldValue.serverTimestamp()
+									inactiveDate: firebase.firestore.FieldValue.serverTimestamp(),
+									user1Won: true
 								});
 							}else{	
 								//debt exists
@@ -78,7 +89,8 @@ resolveForm.addEventListener('submit',(e) => {
 									active: false,
 									winner: user1Doc.data().name,
 									resolved: true,
-									inactiveDate: firebase.firestore.FieldValue.serverTimestamp()
+									inactiveDate: firebase.firestore.FieldValue.serverTimestamp(),
+									user1Won: true
 								});
 							}
 						});
@@ -97,7 +109,8 @@ resolveForm.addEventListener('submit',(e) => {
 									active: false,
 									winner: user2Doc.data().name,
 									resolved: true,
-									inactiveDate: firebase.firestore.FieldValue.serverTimestamp()
+									inactiveDate: firebase.firestore.FieldValue.serverTimestamp(),
+									user1Won: false
 								});
 							}else{	
 								//debt exists
@@ -110,7 +123,8 @@ resolveForm.addEventListener('submit',(e) => {
 									active: false,
 									winner: user2Doc.data().name,
 									resolved: true,
-									inactiveDate: firebase.firestore.FieldValue.serverTimestamp()
+									inactiveDate: firebase.firestore.FieldValue.serverTimestamp(),
+									user1Won: false
 								});
 							}
 						});
