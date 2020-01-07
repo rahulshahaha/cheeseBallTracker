@@ -242,7 +242,7 @@ function resolvedBets(betDocs,userDocs){
                         var li = `
                         <li class="collection-item">
                         <p class="left-align">${betText}</p>
-                        <p class="btn yellow darken-2 z-depth-0">${resolvedBet.data().winner}</p>
+                        <p onClick="congratulate('${resolvedBet.data().winner}')" class="btn yellow darken-2 z-depth-0">${resolvedBet.data().winner}</p>
                         <p class="right-align right">Resolved on: ${dateString}</p>
                         </li>`;
                         html += li;
@@ -250,4 +250,9 @@ function resolvedBets(betDocs,userDocs){
             resolvedList.innerHTML = html;
         }
     }
+}
+
+
+function congratulate(person){
+    alert('Congratulations, ' + person + "!");
 }
