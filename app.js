@@ -2,10 +2,6 @@ var resolveBetID;
 var resolveForm = document.querySelector("#resolve-form");
 
 
-console.log(Date());
-
-
-
 //delete bet
 function deleteBet(betID){
 	if (confirm("Are you sure?")) {
