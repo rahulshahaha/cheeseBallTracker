@@ -6,6 +6,7 @@ const accountDetails = document.querySelector('.account-details');
 const adminItems = document.querySelectorAll('.admin');
 const betStats = document.querySelector('#bet-stats');
 const owedStats = document.querySelector('#owed-stats');
+const resolvedList = document.querySelector('#resolved-list');
 
 const setupUI = (user) => {
   if(user){
@@ -151,6 +152,13 @@ const setupBets = (betDocs,userDocs,currentUser) => {
 
             betDocs.forEach(betDoc => {
                 if(betDoc.data().active == true){
+                var date = betDoc.data().activeDate;
+                var activeDate;
+                if (date == null){
+                    activeDate = new Date(2010,0,1);
+                }else{
+                    activeDate = new Date(date.seconds*1000);
+                }
                 totalBets++;
                 totalBallsBet += betDoc.data().amount;
                 }
@@ -173,9 +181,12 @@ const setupBets = (betDocs,userDocs,currentUser) => {
                     <button onclick="resolveBet('${betDoc.id}')" class="btn yellow darken-2 z-depth-0 modal-trigger" betID="${betDoc.id}" data-target="modal-resolve">Resolve</button>`
                     var deleteButton = `
                     <button onclick="deleteBet('${betDoc.id}')" class="btn yellow darken-2 z-depth-0" betID="${betDoc.id}">Delete</button>`
+                    var dateLabel = `
+                    <p class=" darken-2 z-depth-0 right-align" betID="${betDoc.id}">Created On: ${activeDate.toLocaleDateString()}</p>`
                     li += text;
                     li += resolveButton;
                     li += deleteButton;
+                    li += dateLabel;
                     html += li;
                 }
             });
@@ -203,3 +214,40 @@ document.addEventListener('DOMContentLoaded', function() {
   M.Collapsible.init(items);
 
 });
+
+
+
+function resolvedBets(betDocs,userDocs){
+    var html = ``;
+    if(betDocs.length){
+        resolvedBetsList = betDocs.filter( function(betDocs){return (betDocs.data().resolved == true);} );
+        resolvedBetsList.sort((a,b) => {
+            if(a.data().inactiveDate > b.data().inactiveDate){
+                return -1;
+            }else{
+                return 1;
+            }
+        })
+        if(resolvedBetsList.length){
+            resolvedBetsList.forEach(resolvedBet => {
+                user1 = userDocs.filter( function(userDocs){return (userDocs.id == resolvedBet.data().user1.id);} );
+                user2 = userDocs.filter( function(userDocs){return (userDocs.id == resolvedBet.data().user2.id);} );
+                        var betText = user1[0].data().name + ' bets ' + user2[0].data().name + ' ' + resolvedBet.data().claim + ' for ' + resolvedBet.data().amount + ' cheese ball(s)';
+                        var timestamp = resolvedBet.data().inactiveDate;
+                        var dateString = 'null';
+                        if(timestamp != null){
+                        var inactiveDate = new Date(timestamp.seconds * 1000);
+                        dateString = inactiveDate.toLocaleDateString();
+                        }
+                        var li = `
+                        <li class="collection-item">
+                        <p class="left-align">${betText}</p>
+                        <p class="btn yellow darken-2 z-depth-0">${resolvedBet.data().winner}</p>
+                        <p class="right-align right">Resolved on: ${dateString}</p>
+                        </li>`;
+                        html += li;
+            });
+            resolvedList.innerHTML = html;
+        }
+    }
+}

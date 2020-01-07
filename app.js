@@ -2,6 +2,7 @@ var resolveBetID;
 var resolveForm = document.querySelector("#resolve-form");
 
 
+console.log(Date());
 
 
 
@@ -9,7 +10,8 @@ var resolveForm = document.querySelector("#resolve-form");
 function deleteBet(betID){
 	if (confirm("Are you sure?")) {
 		db.collection('bets').doc(betID).update({
-			active: false
+			active: false,
+			resolved: false
 		});
 	} 
 }
@@ -64,7 +66,10 @@ resolveForm.addEventListener('submit',(e) => {
 									amount:parseInt(betDoc.data().amount)
 								});
 								db.collection('bets').doc(betDoc.id).update({
-									active: false
+									active: false,
+									winner: user1Doc.data().name,
+									resolved: true,
+									inactiveDate: firebase.firestore.FieldValue.serverTimestamp()
 								});
 							}else{	
 								//debt exists
@@ -74,7 +79,10 @@ resolveForm.addEventListener('submit',(e) => {
 									amount: parseInt(betDoc.data().amount) + parseInt(oweDoc.docs[0].data().amount)
 								});
 								db.collection('bets').doc(betDoc.id).update({
-									active: false
+									active: false,
+									winner: user1Doc.data().name,
+									resolved: true,
+									inactiveDate: firebase.firestore.FieldValue.serverTimestamp()
 								});
 							}
 						});
@@ -90,7 +98,10 @@ resolveForm.addEventListener('submit',(e) => {
 									amount: parseInt(betDoc.data().amount)
 								});
 								db.collection('bets').doc(betDoc.id).update({
-									active: false
+									active: false,
+									winner: user2Doc.data().name,
+									resolved: true,
+									inactiveDate: firebase.firestore.FieldValue.serverTimestamp()
 								});
 							}else{	
 								//debt exists
@@ -100,7 +111,10 @@ resolveForm.addEventListener('submit',(e) => {
 									amount: parseInt(betDoc.data().amount) + parseInt(oweDoc.docs[0].data().amount)
 								});
 								db.collection('bets').doc(betDoc.id).update({
-									active: false
+									active: false,
+									winner: user2Doc.data().name,
+									resolved: true,
+									inactiveDate: firebase.firestore.FieldValue.serverTimestamp()
 								});
 							}
 						});
@@ -142,6 +156,7 @@ auth.onAuthStateChanged(user => {
 				currentUser = firebase.auth().currentUser;
 				if(currentUser){
 				setupBets(betSnapshot.docs,userSnapshot.docs,firebase.auth().currentUser);
+				resolvedBets(betSnapshot.docs,userSnapshot.docs);
 				}
 			});
 		});
