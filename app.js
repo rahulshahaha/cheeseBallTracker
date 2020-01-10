@@ -211,7 +211,8 @@ createForm.addEventListener('submit',(e) => {
 		claim: claim,
 		amount: parseInt(amount),
 		active: true,
-		secret: secret
+		secret: secret,
+		activeDate: firebase.firestore.FieldValue.serverTimestamp()
     }).then(() => {
         //close modal and reset form
         const modal = document.querySelector('#modal-create');
