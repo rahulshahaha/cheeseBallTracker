@@ -39,18 +39,20 @@ const setupUI = (user) => {
 //setup users
 const setupUsers = (userDocs,owedDocs) => {
   
-var ballzOwed = 0;
-db.collection('ballzOwed').get().then(owedDocs => {
-    owedDocs.forEach(owedDoc => {
-        ballzOwed += owedDoc.data().amount;
-    });
-    owedHtml = `<h5 class="center-align">Total Balls Owed: ${ballzOwed}</h5>`
-    owedStats.innerHTML = owedHtml;
-});
+
 
 
 
   if(userDocs.length){
+
+    var ballzOwed = 0;
+    db.collection('ballzOwed').get().then(owedDocs => {
+        owedDocs.forEach(owedDoc => {
+            ballzOwed += owedDoc.data().amount;
+        });
+        owedHtml = `<h5 class="center-align">Total Balls Owed: ${ballzOwed}</h5>`
+        owedStats.innerHTML = owedHtml;
+    });
 
 
     let html = '';
@@ -135,6 +137,7 @@ db.collection('ballzOwed').get().then(owedDocs => {
     userList.innerHTML = html;
 }else{
   userList.innerHTML = '<h5 class="center-align">Login to view cheese balls</h5>';
+  owedStats.innerHTML = '';
 }
 
 }
@@ -199,6 +202,7 @@ const setupBets = (betDocs,userDocs,currentUser) => {
 
         }else{
             betList.innerHTML = '<h5 class="center-align">Login to view pending bets</h5>';
+            betStats.innerHTML = '';
         }
 
 }
