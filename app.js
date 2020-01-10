@@ -182,6 +182,7 @@ auth.onAuthStateChanged(user => {
 		setupUI();
 		setupUsers([]);
 		setupBets([]);
+		resolvedBets([],[]);
     }
 });
 

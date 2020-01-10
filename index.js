@@ -255,6 +255,8 @@ function resolvedBets(betDocs,userDocs){
             });
             resolvedList.innerHTML = html;
         }
+    }else{
+        resolvedList.innerHTML = `<h5 class="center-align">Login to view resolved bets</h5>`;
     }
 }
 
