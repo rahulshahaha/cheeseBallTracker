@@ -97,6 +97,9 @@ resolveForm.addEventListener('submit',(e) => {
 								});
 							}
 						});
+						db.collection('userz').doc(user1Doc.id).update({
+							congrats: user1Doc.data().congrats + parseInt(1)
+						})
 					}else{
 						//user 2 wins
 						//see if there is existing debt
@@ -133,6 +136,9 @@ resolveForm.addEventListener('submit',(e) => {
 								});
 							}
 						});
+						db.collection('userz').doc(user2Doc.id).update({
+							congrats: user2Doc.data().congrats + parseInt(1)
+						})
 					}
 					const modal = document.querySelector('#modal-resolve');
 					M.Modal.getInstance(modal).close();
