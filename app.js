@@ -163,6 +163,7 @@ auth.onAuthStateChanged(user => {
 				if(currentUser){
 					setupUsers(userSnapshot.docs,owedSnapshot.docs);
 				}
+				setupUI(user);
 			});
 		});
 		db.collection('ballzOwed').onSnapshot(owedSnapshot => {
