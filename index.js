@@ -7,6 +7,7 @@ const adminItems = document.querySelectorAll('.admin');
 const betStats = document.querySelector('#bet-stats');
 const owedStats = document.querySelector('#owed-stats');
 const resolvedList = document.querySelector('#resolved-list');
+const resolvedStats = document.querySelector('#resolved-stats');
 
 const setupUI = (user) => {
   if(user){
@@ -223,6 +224,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
 function resolvedBets(betDocs,userDocs){
     var html = ``;
+    var resolvedCount = 0;
     if(betDocs.length){
         resolvedBetsList = betDocs.filter( function(betDocs){return (betDocs.data().resolved == true);} );
         resolvedBetsList.sort((a,b) => {
@@ -256,8 +258,10 @@ function resolvedBets(betDocs,userDocs){
                 <p class="right-align right">Resolved on: ${dateString}</p>
                 </li>`;
                 html += li;
+                resolvedCount += resolvedBet.data().amount;
             });
             resolvedList.innerHTML = html;
+            resolvedStats.innerHTML = `<h5 class="center-align">Balls Resolved: ${resolvedCount}</h5>`;
         }
     }else{
         resolvedList.innerHTML = `<h5 class="center-align">Login to view resolved bets</h5>`;
