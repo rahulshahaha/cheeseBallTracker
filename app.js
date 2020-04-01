@@ -179,7 +179,9 @@ auth.onAuthStateChanged(user => {
 				currentUser = firebase.auth().currentUser;
 				if(currentUser){
 				setupBets(betSnapshot.docs,userSnapshot.docs,firebase.auth().currentUser);
-				resolvedBets(betSnapshot.docs,userSnapshot.docs);
+				db.collection('bets').where('resolved','==',true).orderBy('inactiveDate','desc').limit(10).get().then(filteredBets => {
+					resolvedBets(filteredBets.docs,userSnapshot.docs);
+				});
 				}
 			});
 		});

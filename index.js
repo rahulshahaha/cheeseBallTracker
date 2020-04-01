@@ -259,7 +259,7 @@ function resolvedBets(betDocs,userDocs){
                 resolvedCount += resolvedBet.data().amount;
             });
             resolvedList.innerHTML = html;
-            resolvedStats.innerHTML = `<h5 class="center-align">Balls Resolved: ${resolvedCount}</h5>`;
+            resolvedStats.innerHTML = `<h5 class="center-align">Balls Recently Resolved: ${resolvedCount}</h5>`;
         }
     }else{
         resolvedList.innerHTML = `<h5 class="center-align">Login to view resolved bets</h5>`;
