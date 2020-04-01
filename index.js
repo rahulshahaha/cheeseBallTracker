@@ -47,13 +47,11 @@ const setupUsers = (userDocs,owedDocs) => {
   if(userDocs.length){
 
     var ballzOwed = 0;
-    db.collection('ballzOwed').get().then(owedDocs => {
-        owedDocs.forEach(owedDoc => {
-            ballzOwed += owedDoc.data().amount;
-        });
-        owedHtml = `<h5 class="center-align">Total Balls Owed: ${ballzOwed}</h5>`
-        owedStats.innerHTML = owedHtml;
+    owedDocs.forEach(owedDoc => {
+        ballzOwed += owedDoc.data().amount;
     });
+    owedHtml = `<h5 class="center-align">Total Balls Owed: ${ballzOwed}</h5>`
+    owedStats.innerHTML = owedHtml;
 
 
     let html = '';
