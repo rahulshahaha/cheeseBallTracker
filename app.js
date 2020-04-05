@@ -4,13 +4,6 @@ var globalUser;
 
 
 
-// db.collection('bets').where('resolved','==',true).get().then(bets => {
-// 	bets.docs.forEach(bet => {
-// 		db.collection('bets').doc(bet.id).update({
-// 			resolvedBy: db.doc('userz/'+ globalUser.uid)
-// 		})
-// 	});
-// })
 
 
 //delete bet
@@ -61,88 +54,80 @@ resolveForm.addEventListener('submit',(e) => {
 					resolveForm.reset();
 					return;
 				}else{
+					//set winner
 					if(winnerEmail == user1Doc.data().email){
-						//user 1 wins
-						//see if there is existing debt
-						db.collection('ballzOwed').where('owed','==',db.collection('userz').doc(betDoc.data().user1.id)).where('owedBy','==',db.collection('userz').doc(betDoc.data().user2.id)).get().then(oweDoc =>{
-							if(oweDoc.docs[0] == null){
-								//debt does not exist
-								db.collection('ballzOwed').add({
-									owed: db.doc('userz/'+ user1Doc.id),
-									owedBy: db.doc('userz/'+ user2Doc.id),
-									amount:parseInt(betDoc.data().amount)
-								});
-								db.collection('bets').doc(betDoc.id).update({
-									active: false,
-									winner: user1Doc.data().name,
-									resolved: true,
-									inactiveDate: firebase.firestore.FieldValue.serverTimestamp(),
-									user1Won: true,
-									resolvedBy: db.doc('userz/'+ globalUser.uid)
-								});
-							}else{	
-								//debt exists
-								db.collection('ballzOwed').doc(oweDoc.docs[0].id).set({
-									owed: db.doc('userz/'+ user1Doc.id),
-									owedBy: db.doc('userz/'+ user2Doc.id),
-									amount: parseInt(betDoc.data().amount) + parseInt(oweDoc.docs[0].data().amount)
-								});
-								db.collection('bets').doc(betDoc.id).update({
-									active: false,
-									winner: user1Doc.data().name,
-									resolved: true,
-									inactiveDate: firebase.firestore.FieldValue.serverTimestamp(),
-									user1Won: true,
-									resolvedBy: db.doc('userz/'+ globalUser.uid)
-								});
-							}
-						});
-						db.collection('userz').doc(user1Doc.id).update({
-							congrats: user1Doc.data().congrats + parseInt(1)
-						})
+						var winnerDoc = user1Doc;
+						var loserDoc = user2Doc;
+						var whoWon = true;
 					}else{
-						//user 2 wins
-						//see if there is existing debt
-						db.collection('ballzOwed').where('owed','==',db.collection('userz').doc(betDoc.data().user2.id)).where('owedBy','==',db.collection('userz').doc(betDoc.data().user1.id)).get().then(oweDoc =>{
-							if(oweDoc.docs[0] == null){
-								//debt does not exist
-								db.collection('ballzOwed').add({
-									owed: db.doc('userz/'+ user2Doc.id),
-									owedBy: db.doc('userz/'+ user1Doc.id),
-									amount: parseInt(betDoc.data().amount)
-								});
-								db.collection('bets').doc(betDoc.id).update({
-									active: false,
-									winner: user2Doc.data().name,
-									resolved: true,
-									inactiveDate: firebase.firestore.FieldValue.serverTimestamp(),
-									user1Won: false,
-									resolvedBy: db.doc('userz/'+ globalUser.uid)
-								});
-							}else{	
-								//debt exists
-								db.collection('ballzOwed').doc(oweDoc.docs[0].id).set({
-									owed: db.doc('userz/'+ user2Doc.id),
-									owedBy: db.doc('userz/'+ user1Doc.id),
-									amount: parseInt(betDoc.data().amount) + parseInt(oweDoc.docs[0].data().amount)
-								});
-								db.collection('bets').doc(betDoc.id).update({
-									active: false,
-									winner: user2Doc.data().name,
-									resolved: true,
-									inactiveDate: firebase.firestore.FieldValue.serverTimestamp(),
-									user1Won: false,
-									resolvedBy: db.doc('userz/'+ globalUser.uid)
-								});
-							}
-						});
-						db.collection('userz').doc(user2Doc.id).update({
-							congrats: user2Doc.data().congrats + parseInt(1)
-						})
+						var winnerDoc = user2Doc;
+						var loserDoc = user1Doc;
+						var whoWon = false;
 					}
-					const modal = document.querySelector('#modal-resolve');
-					M.Modal.getInstance(modal).close();
-					resolveForm.reset();
+					//find existing records
+					db.collection('ballzOwed').where('owed','==',db.collection('userz').doc(winnerDoc.id)).where('owedBy','==',db.collection('userz').doc(loserDoc.id)).get().then(oweDoc1 => {
+						if(oweDoc1.docs[0] == null){
+							db.collection('ballzOwed').where('owed','==',db.collection('userz').doc(loserDoc.id)).where('owedBy','==',db.collection('userz').doc(winnerDoc.id)).get().then(oweDoc2 => {
+								if(oweDoc2.docs[0] == null){
+									//no docs exist
+
+									//create owed record
+									db.collection('ballzOwed').add({
+										owed: db.doc('userz/'+ winnerDoc.id),
+										owedBy: db.doc('userz/'+ loserDoc.id),
+										amount:parseInt(betDoc.data().amount)
+									});
+									//update bet
+									db.collection('bets').doc(betDoc.id).update({
+										active: false,
+										winner: winnerDoc.data().name,
+										resolved: true,
+										inactiveDate: firebase.firestore.FieldValue.serverTimestamp(),
+										user1Won: whoWon,
+										resolvedBy: db.doc('userz/'+ globalUser.uid)
+									});
+								}else{
+									//doc where loser is owed exists
+									//update record
+									db.collection('ballzOwed').doc(oweDoc2.docs[0].id).set({
+										owed: db.doc('userz/'+ loserDoc.id),
+										owedBy: db.doc('userz/'+ winnerDoc.id),
+										amount: parseInt(oweDoc2.docs[0].data().amount) - parseInt(betDoc.data().amount)
+									});
+									//update bet
+									db.collection('bets').doc(betDoc.id).update({
+										active: false,
+										winner: winnerDoc.data().name,
+										resolved: true,
+										inactiveDate: firebase.firestore.FieldValue.serverTimestamp(),
+										user1Won: whoWon,
+										resolvedBy: db.doc('userz/'+ globalUser.uid)
+									});
+								}
+							})
+						}else{
+							//doc where winner is owed exists
+
+							//update record
+							db.collection('ballzOwed').doc(oweDoc1.docs[0].id).set({
+								owed: db.doc('userz/'+ winnerDoc.id),
+								owedBy: db.doc('userz/'+ loserDoc.id),
+								amount: parseInt(betDoc.data().amount) + parseInt(oweDoc1.docs[0].data().amount)
+							});
+							//update bet
+							db.collection('bets').doc(betDoc.id).update({
+								active: false,
+								winner: winnerDoc.data().name,
+								resolved: true,
+								inactiveDate: firebase.firestore.FieldValue.serverTimestamp(),
+								user1Won: whoWon,
+								resolvedBy: db.doc('userz/'+ globalUser.uid)
+							});
+						}
+						const modal = document.querySelector('#modal-resolve');
+						M.Modal.getInstance(modal).close();
+						resolveForm.reset();
+					})
 				}
 			});
 		});
@@ -250,6 +235,47 @@ recordForm.addEventListener('submit',(e) => {
 	}
 
 	//check for existing debt
+	db.collection('ballzOwed').where('owed', '==', db.collection('userz').doc(payeeID)).where('owedBy', '==', db.collection('userz').doc(payerID)).get().then(debtDocs1 => {
+		if(debtDocs1.docs[0] == null){
+			db.collection('ballzOwed').where('owed', '==', db.collection('userz').doc(payerID)).where('owedBy', '==', db.collection('userz').doc(payeeID)).get().then(debtDocs2 => {
+				if(debtDocs2.docs[0] == null){
+					//no debts exists
+					db.collection('ballzOwed').add({
+						owed: db.doc('userz/'+ payerID),
+						owedBy: db.doc('userz/'+ payeeID),
+						amount: parseInt(amount)
+					});
+					const modal = document.querySelector('#modal-record');
+					M.Modal.getInstance(modal).close();
+					recordForm.reset();
+				}else{
+					//debt exitst where payer is owed balls
+					db.collection('ballzOwed').doc(debtDocs2.docs[0].id).set({
+						owed: db.doc('userz/'+ payerID),
+						owedBy: db.doc('userz/'+ payeeID),
+						amount: parseInt(debtDocs2.docs[0].data().amount) + parseInt(amount)
+					}).then(() => {
+						const modal = document.querySelector('#modal-record');
+						M.Modal.getInstance(modal).close();
+						recordForm.reset();		
+					})
+				}
+			})
+		}else{
+			//debt where payer owes balls exists
+			db.collection('ballzOwed').doc(debtDocs1.docs[0].id).set({
+				owed: db.doc('userz/'+ payeeID),
+				owedBy: db.doc('userz/'+ payerID),
+				amount: parseInt(debtDocs1.docs[0].data().amount) - parseInt(amount)
+			}).then(() => {
+				const modal = document.querySelector('#modal-record');
+				M.Modal.getInstance(modal).close();
+				recordForm.reset();		
+			})
+		}
+	})
+
+/* 	//check for existing debt
 	db.collection('ballzOwed').where('owed', '==', db.collection('userz').doc(payeeID)).where('owedBy', '==', db.collection('userz').doc(payerID)).get().then(debtDocs => {
 		if(debtDocs.docs[0] == null){
 			//doesnt exist
@@ -281,7 +307,7 @@ recordForm.addEventListener('submit',(e) => {
 				})
 			}
 		}
-	});
+	}); */
 
 });
 
