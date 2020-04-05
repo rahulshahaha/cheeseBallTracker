@@ -62,6 +62,8 @@ const setupUsers = (userDocs,owedDocs) => {
         var textList = [];
         const userData = doc.data();
         const userID = doc.id;
+        var postivieList = [];
+        var negativeList = [];
 
         optionshtml += `<option value="${userID}">${userData.name}</option>`
 
@@ -72,9 +74,16 @@ const setupUsers = (userDocs,owedDocs) => {
             var owedBy = owedByArray[0].data().name;
             var owedTo = doc.data().name;
             var amount = parseInt(owedToRecord.data().amount);
-            var text = owedBy + " owes " + owedTo + " " + amount + " cheese balls";
+            var text;
+            if(amount > 0){
+                text = owedBy + " owes " + owedTo + " " + amount + " cheese balls";
+                postivieList.push(text);
+            }else if (amount < 0){
+                text = owedTo + " owes " + owedBy + " " + amount*-1 + " cheese balls";
+                negativeList.push(text);
+            }
             //li += `<div class="collapsible-body white">${text}</div>`
-            textList.push(`<div class="collapsible-body white blue lighten-1">${text}</div>`);
+            //textList.push(`<div class="collapsible-body white blue lighten-1">${text}</div>`);
             balance += amount;
         })
 
@@ -85,15 +94,29 @@ const setupUsers = (userDocs,owedDocs) => {
             var owedTo = owedArray[0].data().name;
             var owedBy = doc.data().name;
             var amount = parseInt(owedRecord.data().amount);
-            var text = owedBy + " owes " + owedTo + " " + amount + " cheese balls";
+            var text;
+            if(amount > 0){
+                text = owedBy + " owes " + owedTo + " " + amount + " cheese balls";
+                negativeList.push(text);
+            }else if(amount < 0){
+                text = owedTo + " owes " + owedBy + " " + amount*-1 + " cheese balls";
+                postivieList.push(text);
+            }
             // li += `<div class="collapsible-body white">${text}</div>`
-            textList.push(`<div class="collapsible-body white red lighten-1">${text}</div>`);
+            //textList.push(`<div class="collapsible-body white red lighten-1">${text}</div>`);
             balance -= amount;
         })
 
-        if(textList.length == 0){
+        if(negativeList.length == 0 && postivieList.length == 0){
             //li += `<div class="collapsible-body white">No balls owed or owed to</div>`
             textList.push(`<div class="collapsible-body white">No balls owed or owed to</div>`);   
+        }else{
+            postivieList.forEach(posText => {
+                textList.push(`<div class="collapsible-body white blue lighten-1">${posText}</div>`);
+            })
+            negativeList.forEach(negText => {
+                textList.push(`<div class="collapsible-body white red lighten-1">${negText}</div>`);
+            })
         }
 
         var li = `
