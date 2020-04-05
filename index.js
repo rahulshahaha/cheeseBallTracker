@@ -82,8 +82,6 @@ const setupUsers = (userDocs,owedDocs) => {
                 text = owedTo + " owes " + owedBy + " " + amount*-1 + " cheese balls";
                 negativeList.push(text);
             }
-            //li += `<div class="collapsible-body white">${text}</div>`
-            //textList.push(`<div class="collapsible-body white blue lighten-1">${text}</div>`);
             balance += amount;
         })
 
@@ -102,13 +100,10 @@ const setupUsers = (userDocs,owedDocs) => {
                 text = owedTo + " owes " + owedBy + " " + amount*-1 + " cheese balls";
                 postivieList.push(text);
             }
-            // li += `<div class="collapsible-body white">${text}</div>`
-            //textList.push(`<div class="collapsible-body white red lighten-1">${text}</div>`);
             balance -= amount;
         })
 
         if(negativeList.length == 0 && postivieList.length == 0){
-            //li += `<div class="collapsible-body white">No balls owed or owed to</div>`
             textList.push(`<div class="collapsible-body white">No balls owed or owed to</div>`);   
         }else{
             postivieList.forEach(posText => {
