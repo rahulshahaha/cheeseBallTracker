@@ -275,40 +275,6 @@ recordForm.addEventListener('submit',(e) => {
 		}
 	})
 
-/* 	//check for existing debt
-	db.collection('ballzOwed').where('owed', '==', db.collection('userz').doc(payeeID)).where('owedBy', '==', db.collection('userz').doc(payerID)).get().then(debtDocs => {
-		if(debtDocs.docs[0] == null){
-			//doesnt exist
-			db.collection('ballzOwed').add({
-				owed: db.doc('userz/'+ payeeID),
-				owedBy: db.doc('userz/'+ payerID),
-				amount: parseInt(amount)*-1
-			});
-			const modal = document.querySelector('#modal-record');
-			M.Modal.getInstance(modal).close();
-			recordForm.reset();
-		}else{
-			//exists
-			if(debtDocs.docs[0].data().amount - amount == 0){
-				db.collection("ballzOwed").doc(debtDocs.docs[0].id).delete().then(() => {
-					const modal = document.querySelector('#modal-record');
-					M.Modal.getInstance(modal).close();
-					recordForm.reset();		
-				});
-			}else{
-				db.collection('ballzOwed').doc(debtDocs.docs[0].id).set({
-					owed: db.doc('userz/'+ payeeID),
-					owedBy: db.doc('userz/'+ payerID),
-					amount: parseInt(debtDocs.docs[0].data().amount) - parseInt(amount)
-				}).then(() => {
-					const modal = document.querySelector('#modal-record');
-					M.Modal.getInstance(modal).close();
-					recordForm.reset();		
-				})
-			}
-		}
-	}); */
-
 });
 
 //signup
